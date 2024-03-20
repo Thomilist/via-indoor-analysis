@@ -1,0 +1,28 @@
+.pane-container
+{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 
+        "header header"
+        "map controls";
+    width: 100%;
+    height: 100%;
+
+    & .header
+    {
+        grid-area: header;
+    }
+
+    & .map
+    {
+        grid-area: map;
+        width: 100%;
+        height: 100%;
+    }
+
+    & .controls
+    {
+        grid-area: controls;
+    }
+}
