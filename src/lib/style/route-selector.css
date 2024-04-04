@@ -1,0 +1,108 @@
+table#route-selector
+{
+    --row-height: 1.5em;
+    border-collapse: collapse;
+
+    & thead
+    {
+        border-bottom: 1px solid gray;
+
+        & tr
+        {
+            & td
+            {
+                &.highlight
+                {
+                    width: min-content;
+                }
+
+                &.route-choice-header
+                {
+                    width: 100%;
+                    text-align: start;
+                }
+            }
+        }
+    }
+
+    & tbody
+    {
+        & tr
+        {
+            &:nth-child(odd)
+            {
+                background-color: rgb(230, 230, 230);
+            }
+
+            & label
+            {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+    
+                & div
+                {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 0.5em;
+                }
+    
+                & td
+                {
+                    height: var(--row-height);
+                    vertical-align: middle;
+                    
+                    &.highlight
+                    {
+                        width: 1em;
+                        line-height: var(--row-height);
+                    }
+    
+                    &.colour
+                    {
+                        height: var(--row-height);
+                        width: 4em;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                    }
+    
+                    &.number
+                    {
+                        line-height: var(--row-height);
+                    }
+    
+                    &.distance-value
+                    {
+                        line-height: var(--row-height);
+                        text-align: end;
+                        /* padding-right: 0.5em; */
+                    }
+    
+                    &.distance-unit
+                    {
+                        line-height: var(--row-height);
+                    }
+    
+                    &.elevation-value
+                    {
+                        line-height: var(--row-height);
+                        text-align: end;
+                        /* padding-left: 1em; */
+                    }
+    
+                    &.elevation-unit
+                    {
+                        
+                    }
+                }
+            }
+        }
+    }
+}
+
+svg
+{
+    height: 0.5em;
+}

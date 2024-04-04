@@ -1,6 +1,9 @@
 <script lang="ts">
-    import { resetViewbox } from "$lib/map";
-
+    import { name } from "$lib/names";
+    import { mode } from "$lib/state";
+    import EditControls from "$lib/widget/EditControls.svelte";
+    import ViewControls from "$lib/widget/ViewControls.svelte";
+    import ViewportControls from "$lib/widget/ViewportControls.svelte";
 
 </script>
 
@@ -12,8 +15,18 @@
 
 
 
-<div class="controls pane">
-    <h2>Controls</h2>
+<div class="controls pane" id={name.pane.controls}>
+    <div class="subpane">
+        {#if $mode === "Edit"}
+            <EditControls/>
+        {:else if $mode === "View"}
+            <ViewControls/>
+        {/if}
+        
+        <hr>
+    </div>
 
-    <button on:click={resetViewbox}>Reset view</button>
+    <div class="subpane">
+        <ViewportControls/>
+    </div>
 </div>

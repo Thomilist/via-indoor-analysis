@@ -1,0 +1,73 @@
+#view-controls
+{
+    display: grid;
+    grid-template-areas: 
+        "pan zoom"
+        "fit fit";
+    gap: 0.5em;
+    place-content: center;
+    place-items: center;
+
+    & #view-pan-controls
+    {
+        width: min-content;
+        height: min-content;
+        display: grid;
+        grid-template-areas: 
+            ". up ."
+            "left . right"
+            ". down .";
+        gap: 0;
+        
+        & .view-pan-button
+        {
+            display: none;
+        }
+    
+        & #view-pan-left
+        {
+            grid-area: left;
+        }
+    
+        & #view-pan-up
+        {
+            grid-area: up;
+        }
+    
+        & #view-pan-down
+        {
+            grid-area: down;
+        }
+    
+        & #view-pan-right
+        {
+            grid-area: right;
+        }
+    }
+
+    & #view-zoom-controls
+    {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        
+        & .view-zoom-button
+        {
+            width: 2em;
+            height: 2em;
+            font-weight: 900;
+            font-size: 1.5em;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    & #view-fit-controls
+    {
+        grid-area: fit;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+    }
+}

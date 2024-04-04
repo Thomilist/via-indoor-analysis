@@ -1,0 +1,10 @@
+.course-create-delete
+{
+    display: flex;
+    gap: 0.5em;
+
+    & button
+    {
+        flex-grow: 1;
+    }
+}

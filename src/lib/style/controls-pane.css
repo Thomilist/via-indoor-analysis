@@ -3,8 +3,31 @@
     padding: 1em;
     border-left: 2px solid black;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5em;
+
+    & .subpane
+    {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+    }
+
     & h2
     {
         margin: 0;
+    }
+
+    & p
+    {
+        margin: 0;
+    }
+
+    & hr
+    {
+        width: 100%;
+        color: black;
     }
 }

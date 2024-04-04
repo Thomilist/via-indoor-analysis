@@ -1,0 +1,17 @@
+.pan-direction-triangle
+{
+    stroke: #8f8f9d;
+    fill: #e9e9ed;
+
+    &:hover
+    {
+        stroke: #676774;
+        fill: #d0d0d7;
+    }
+
+    &:active
+    {
+        stroke: #484851;
+        fill: #b1b1b9;
+    }
+}

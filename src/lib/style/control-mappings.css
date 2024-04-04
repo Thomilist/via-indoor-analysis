@@ -1,0 +1,21 @@
+dl.control-mappings
+{
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5em;
+    list-style: none;
+
+    & kbd
+    {
+        background-color: lightgray;
+        border: 1px solid gray;
+        border-radius: 0.2em;
+        padding: 0 0.2em;
+    }
+    
+    & dd
+    {
+        margin: 0;
+    }
+}
