@@ -4,7 +4,7 @@
 
     const options: { value: MapNodeName, DA: string, EN: string }[] =
     [
-        { value: "Normal", DA: "Standard", EN: "Basic"},
+        { value: "Normal", DA: "Guide", EN: "Guide"},
         { value: "Waypoint", DA: "Pejlemærke", EN: "Waypoint"},
         { value: "Control", DA: "Post", EN: "Control"},
         { value: "Start", DA: "Start", EN: "Start"},
