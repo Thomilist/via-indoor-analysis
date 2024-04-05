@@ -1,4 +1,4 @@
-/*
+<!--
 
 via-indoor-analysis: Route choice analysis tool for indoor sprint 
 orienteering at VIA University College Horsens.
@@ -17,33 +17,27 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
-*/
+-->
 
 
 
-.header
-{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1em;
-    background-color: darkblue;
+<script lang="ts">
+    import ExternalLinkSymbol from "$lib/render/symbol/ExternalLinkSymbol.svelte";
+    import { lang } from "$lib/state";
+</script>
 
-    & h1
-    {
-        margin: 0;
-        color: white;
-    }
 
-    & .header-items
-    {
-        display: flex;
-        align-items: center;
-        gap: 1em;
 
-        & *
-        {
-            height: min-content;
-        }
-    }
-}
+<style>
+    @import "$lib/style/source-link.css";
+</style>
+
+
+
+<a
+    class="source-link"
+    href="https://github.com/Thomilist/via-indoor-analysis"
+    target="_blank">
+    {({DA: "Kilde", EN: "Source"}[$lang])}
+    <ExternalLinkSymbol/>
+</a>

@@ -26,6 +26,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { lang } from "$lib/state";
     import LanguageSelector from "$lib/widget/LanguageSelector.svelte";
     import ModeSelector from "$lib/widget/ModeSelector.svelte";
+    import SourceLink from "$lib/widget/SourceLink.svelte";
 
 
     const text =
@@ -54,6 +55,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     <h1>{text}</h1>
 
     <div class="header-items">
+        <SourceLink/>
         <ModeSelector/>
         <LanguageSelector/>
     </div>
