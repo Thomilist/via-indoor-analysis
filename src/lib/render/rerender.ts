@@ -21,24 +21,31 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-dl.control-mappings
-{
-    margin: 0;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.5em;
-    list-style: none;
+import { browser } from "$app/environment";
+import { mode } from "$lib/state";
+import { get, writable } from "svelte/store";
 
-    & kbd
-    {
-        background-color: lightgray;
-        border: 1px solid gray;
-        border-radius: 0.2em;
-        padding: 0 0.2em;
-    }
+
+export const rr = writable(1);
+
+
+export function rerender(source?: any)
+{
+    if (!browser) { return; }
     
-    & dd
+    switch (get(mode))
     {
-        margin: 0;
+        case "View":
+        {
+            if (source instanceof MouseEvent)
+            {
+                return;
+            }
+
+            break;
+        }
+        case "Edit": break;
     }
+
+    rr.update(r => r === 1 ? 2 : 1);
 }

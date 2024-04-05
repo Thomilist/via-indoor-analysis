@@ -1,3 +1,26 @@
+/*
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
+
+
 import { get } from "svelte/store";
 import { course_index, courses, current_routes, map_graph, mode } from "../state";
 import { ControlMapNode, WaypointMapNode } from "../map-graph/node";
@@ -5,6 +28,7 @@ import { Route } from "../map-graph/route";
 import { groupIncludesOther, powSelf } from "$lib/utils/misc";
 import type { Course } from "$lib/map-graph/course";
 import { sequenceHasPair } from "$lib/utils/pairs";
+
 
 function selectedControls()
 {
@@ -22,6 +46,7 @@ function selectedControls()
 
     return selected_controls;
 }
+
 
 function routesBetweenControls(controls: ControlMapNode[])
 {
@@ -46,11 +71,13 @@ function routesBetweenControls(controls: ControlMapNode[])
     return routes;
 }
 
+
 function routeWithLeastElevation(routes: Route[])
 {
     routes.sort(Route.sortByElevation);
     return routes.at(0);
 }
+
 
 function restoreRoute(routes: Route[], restore: Route)
 {
@@ -59,6 +86,7 @@ function restoreRoute(routes: Route[], restore: Route)
         routes.push(restore);
     }
 }
+
 
 function excludeDuplicates(routes: Route[])
 {
@@ -76,6 +104,7 @@ function excludeDuplicates(routes: Route[])
 
     routes.splice(0, Infinity, ...unique_routes);
 }
+
 
 function excludeOutliersByDistance(routes: Route[], threshold: number)
 {
@@ -102,6 +131,7 @@ function excludeOutliersByDistance(routes: Route[], threshold: number)
         }
     }
 }
+
 
 // If all waypoints of one route are also in another, exclude the longer route.
 function excludeBasicDetours(routes: Route[])
@@ -167,6 +197,7 @@ function excludeBasicDetours(routes: Route[])
         }
     }
 }
+
 
 // If route A includes waypoint X from route B and waypoint Y from route C,
 // but neither B nor C have both X and Y, and route A is longer than B and C,
@@ -242,6 +273,7 @@ function excludeCrossoverDetours(routes: Route[])
     }
 }
 
+
 // Exclude pointlessly long routes.
 // For routes with equal elevation gain:
 // threshold = (distance of longest included route) / (distance of shortest route)
@@ -263,6 +295,7 @@ function filterByDistance(routes: Route[], threshold: number)
 
     routes.splice(0, Infinity, ...filtered_routes);
 }
+
 
 // Exclude very similar routes, keeping only the shortest variant.
 function filterBySameness(routes: Route[], max_sameness: number)
@@ -310,12 +343,14 @@ function filterBySameness(routes: Route[], max_sameness: number)
     }
 }
 
+
 function useRoutes(routes: Route[])
 {
     routes.sort(Route.sortByDistance);
     routes.forEach((route, index) => route.updateColour(index));
     current_routes.set(routes);
 }
+
 
 export function fetchRoutes()
 {
@@ -338,6 +373,7 @@ export function fetchRoutes()
     useRoutes(routes);
     return routes;
 }
+
 
 export function findShortestRoute(course: Course)
 {

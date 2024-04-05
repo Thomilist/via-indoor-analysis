@@ -1,8 +1,32 @@
+/*
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
+
+
 import { Distance } from "$lib/utils/distance";
 import { isArrayOfNumbers } from "$lib/utils/misc";
 import { isPoint, type Point } from "$lib/utils/vector";
 import { Path } from "./path";
 import { Route } from "./route";
+
 
 export class MapNode
 {
@@ -145,6 +169,7 @@ export class MapNode
     }
 }
 
+
 export class WaypointMapNode extends MapNode
 {
     waypoint_neighbours: Map<WaypointMapNode, Path[]> = new Map();
@@ -232,6 +257,7 @@ export class WaypointMapNode extends MapNode
     }
 }
 
+
 export class ControlMapNode extends WaypointMapNode
 {
     control_neighbours: Map<ControlMapNode, Route[]> = new Map();
@@ -261,6 +287,7 @@ export class ControlMapNode extends WaypointMapNode
     }
 }
 
+
 export class StartControlMapNode extends ControlMapNode
 {
     static isStartControlMapNode(value: any): value is StartControlMapNode
@@ -268,6 +295,7 @@ export class StartControlMapNode extends ControlMapNode
         return value instanceof StartControlMapNode;
     }
 }
+
 
 export class FinishControlMapNode extends ControlMapNode
 {
@@ -277,11 +305,13 @@ export class FinishControlMapNode extends ControlMapNode
     }
 }
 
+
 export type MapNodeConstructor = typeof MapNode;
 export type WaypointMapNodeConstructor = typeof WaypointMapNode;
 export type ControlMapNodeConstructor = typeof ControlMapNode;
 export type StartControlMapNodeConstructor = typeof StartControlMapNode;
 export type FinishControlMapNodeConstructor = typeof FinishControlMapNode;
+
 
 export type AnyMapNodeConstructor
 = MapNodeConstructor
@@ -290,6 +320,7 @@ export type AnyMapNodeConstructor
 | StartControlMapNodeConstructor
 | FinishControlMapNodeConstructor;
 
+
 export type AnyMapNode
 = InstanceType<MapNodeConstructor>
 | InstanceType<WaypointMapNodeConstructor>
@@ -297,9 +328,11 @@ export type AnyMapNode
 | InstanceType<StartControlMapNodeConstructor>
 | InstanceType<FinishControlMapNodeConstructor>;
 
+
 const MapNodeNames = ["Normal", "Waypoint", "Control", "Start", "Finish"] as const;
 export type MapNodeName = typeof MapNodeNames[number];
 export type NodeRelation = "Normal" | "Portal";
+
 
 export type MapNodeJSON =
 {
@@ -309,6 +342,7 @@ export type MapNodeJSON =
     normal_neighbours: number[],
     portal_neighbours: number[]
 };
+
 
 export function isMapNodeJSON(obj: any): obj is MapNodeJSON
 {

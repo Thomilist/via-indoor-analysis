@@ -1,3 +1,26 @@
+<!--
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+-->
+
+
+
 <script lang="ts">
     import { Distance } from "$lib/utils/distance";
     import { MapNode } from "$lib/map-graph/node";
@@ -7,7 +30,9 @@
     import type { RouteSegmentRenderData } from "./render-data";
     import { directionChange, isPortalRouteSegment, radiusFromArc } from "$lib/utils/misc";
 
+
     export let data: RouteSegmentRenderData;
+
 
     const portal = isPortalRouteSegment(data);
     const portal_dimming_factor = 1;
@@ -120,9 +145,6 @@
 
 
 
-
-
-
 {#if portal}
     {@const segment_vector = new Vector({ a: data.nodes[0], b: data.nodes[1] })}
     {@const segment_length = segment_vector.length(["x", "y"])}
@@ -153,6 +175,7 @@
             stroke-dasharray={`${portal_dash_length * dash_scaling} ${portal_dash_length * dash_scaling / 2}`}
         />
     {/each}
+
 {:else}
     <polyline
         points={svgPolylinePoints(data.nodes)}
@@ -173,4 +196,5 @@
             stroke-opacity={data.dimmed ? 0.1 : 1}
         />
     {/each}
+
 {/if}

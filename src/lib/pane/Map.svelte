@@ -1,14 +1,40 @@
+<!--
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+-->
+
+
+
 <script lang="ts">
-    import { add_node_height, add_node_type, course_index, courses, map_graph, edit_mode, mode, rerender, via_map, viewbox, rr } from "$lib/state";
+    import { add_node_height, add_node_type, course_index, courses, map_graph, edit_mode, mode, via_map, viewbox } from "$lib/state";
     import { ControlMapNode, FinishControlMapNode, StartControlMapNode } from "$lib/map-graph/node";
     import { mapPaneRect } from "$lib/viewbox";
     import { name } from "$lib/names";
     import RenderedGraph from "$lib/render/RenderedGraph.svelte";
     import type { Point } from "$lib/utils/vector";
     import { deleteNode, numberRangeMapping } from "$lib/utils/misc";
+    import { rerender, rr } from "$lib/render/rerender";
+
 
     let mouse_moved: boolean = false;
     let hovered_node: number = -1;
+
 
     function debugPrint(event: MouseEvent)
     {
@@ -20,6 +46,7 @@
         rect/visible: ${pane_rect?.visible.width} ${pane_rect?.visible.height}
         vbox: ${$viewbox.serialise()}`);
     }
+
 
     function mapCoords(click: Pick<Point, "x" | "y">): Point
     {
@@ -33,6 +60,7 @@
         return { x: mapX, y: mapY, z: 0 };
     }
 
+
     function pan(event: MouseEvent)
     {
         if (event.buttons === 1)
@@ -45,6 +73,7 @@
             $viewbox.y -= event.movementY * ($viewbox.height / pane_rect.height);
         }
     }
+
 
     function zoom(event: WheelEvent)
     {
@@ -60,6 +89,7 @@
         $viewbox.width *= zoom_scale;
         $viewbox.height *= zoom_scale;
     }
+
 
     function highlightNodeUnderMouse(event: MouseEvent)
     {
@@ -78,6 +108,7 @@
         return hover_changed;
     }
 
+
     function selectNodeUnderMouse(event: MouseEvent)
     {
         const nearby = $map_graph.nearbyNode(mapCoords({ x: event.offsetX, y: event.offsetY }), { selected: !event.ctrlKey });
@@ -87,6 +118,7 @@
             nearby.node.selected = !nearby.was_selected;
         }
     }
+
 
     function addNodeUnderMouse(event: MouseEvent)
     {
@@ -98,6 +130,7 @@
         highlightNodeUnderMouse(event);
     }
 
+
     function deleteNodeUnderMouse(event: MouseEvent)
     {
         const nearby = $map_graph.nearbyNode(mapCoords({ x: event.offsetX, y: event.offsetY }));
@@ -108,6 +141,7 @@
             highlightNodeUnderMouse(event);
         }
     }
+
 
     function addConnectionUnderMouse(event: MouseEvent)
     {
@@ -132,6 +166,7 @@
         }
     }
 
+
     function deleteConnectionUnderMouse(event: MouseEvent)
     {
         const nearby = $map_graph.nearbyNode(mapCoords({ x: event.offsetX, y: event.offsetY }));
@@ -147,6 +182,7 @@
             });
         }
     }
+
 
     function addControlUnderMouse(event: MouseEvent)
     {
@@ -166,6 +202,7 @@
         }
     }
 
+
     function removeControlUnderMouse(event: MouseEvent)
     {
         const nearby = $map_graph.nearbyNode(mapCoords({ x: event.offsetX, y: event.offsetY }));
@@ -184,12 +221,14 @@
         }
     }
 
+
     function handleMouseDown(event: MouseEvent)
     {
         event.preventDefault();
         mouse_moved = false;
         rerender(event);
     }
+
 
     function handleMouseMove(event: MouseEvent)
     {
@@ -202,6 +241,7 @@
             rerender(event);
         }
     }
+
 
     function handleLeftClick(event: MouseEvent)
     {
@@ -246,6 +286,7 @@
         rerender(event);
     }
 
+
     function handleRightClick(event: MouseEvent)
     {
         event.preventDefault();
@@ -253,6 +294,7 @@
         selectNodeUnderMouse(event);
         rerender(event);
     }
+
 
     function handleWheel(event: WheelEvent)
     {

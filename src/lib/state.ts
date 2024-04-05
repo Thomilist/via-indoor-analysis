@@ -1,3 +1,26 @@
+/*
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
+
+
 import { get, readable, writable } from "svelte/store";
 import { MapMeta } from "./map";
 import { MapGraph } from "./map-graph/graph";
@@ -9,31 +32,8 @@ import { findPaths } from "./pathfinding/build-paths";
 import { findRoutes } from "./pathfinding/build-routes";
 import { findShortestRoute } from "./pathfinding/pick-routes";
 import { Route } from "./map-graph/route";
-import { browser } from "$app/environment";
+import { rerender } from "./render/rerender";
 
-
-
-export const rr = writable(1);
-export function rerender(source?: any)
-{
-    if (!browser) { return; }
-    
-    switch (get(mode))
-    {
-        case "View":
-        {
-            if (source instanceof MouseEvent)
-            {
-                return;
-            }
-
-            break;
-        }
-        case "Edit": break;
-    }
-
-    rr.update(r => r === 1 ? 2 : 1);
-}
 
 export const lang = writable<Language>("DA");
 export const mode = writable<Mode>("View");
@@ -50,11 +50,11 @@ export const current_leg = writable<ControlMapNode[]>([]);
 export const current_routes = writable<Route[]>([]);
 export const elevation_plot = writable<boolean>(true);
 
+
 export type Language = "DA" | "EN";
 export type Mode = "View" | "Edit";
 export type EditMode = "Nodes" | "Connections" | "Courses" | "Calculations" | "Files";
 export type CalculationView = "Paths" | "Legs";
-
 
 
 export function calculateState()
@@ -63,6 +63,7 @@ export function calculateState()
     findRoutes();
     get(courses).forEach(course => findShortestRoute(course));
 }
+
 
 export function writeStateToBlob()
 {
@@ -76,12 +77,14 @@ export function writeStateToBlob()
     return new Blob([json], { type: "application/json" });
 }
 
+
 export async function loadStateFromFile(file: File)
 {
     const json = await file.text();
     const data = JSON.parse(json);
     loadStateFromObject(data);
 }
+
 
 export function loadStateFromObject(data: any, silent?: boolean)
 {
@@ -193,11 +196,13 @@ export function loadStateFromObject(data: any, silent?: boolean)
     }
 }
 
+
 type StateData =
 {
     nodes: MapNodeJSON[],
     courses: CourseJSON[]
 };
+
 
 function isStateData(obj: any): obj is StateData
 {

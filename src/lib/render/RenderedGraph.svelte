@@ -1,3 +1,26 @@
+<!--
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+-->
+
+
+
 <script lang="ts">
     import { ControlMapNode, MapNode, WaypointMapNode } from "$lib/map-graph/node";
     import { pairAlreadyIncluded, pairsEqual, type Pair } from "$lib/utils/pairs";
@@ -14,7 +37,6 @@
     import RenderedRouteSegment from "./RenderedRouteSegment.svelte";
     import type { ConnectionRenderData, ControlNodeCenterRenderData, ControlNumberRenderData, CourseLegRenderData, NodeHighlightRenderData, NodeRenderData, RouteJunctionRenderData } from "./render-data";
     import { averageHeight, isPortalRouteSegment } from "$lib/utils/misc";
-
 
 
     // Nodes to render + their metadata.
@@ -109,7 +131,8 @@
 
             return data;
         });
-    
+
+
     // Nodes to highlight.
     $: node_highlight_render_data = node_render_data
         .filter(data =>
@@ -124,7 +147,8 @@
         {
             return ((): NodeHighlightRenderData => { return { node: data.node }; })();
         });
-    
+
+
     // Points to render at control node centers.
     $: control_node_center_render_data = node_render_data
         .filter(data =>
@@ -150,7 +174,8 @@
         {
             return ((): ControlNodeCenterRenderData => { return { control: data.node as ControlMapNode } })();
         });
-    
+
+
     // Connections to render + their metadata.
     $: connection_render_data = $map_graph.nodes
         // General visibility filtering.
@@ -275,7 +300,8 @@
 
             return data;
         });
-    
+
+
     // Route segments to render + their metadata.
     $: route_segment_render_data = (() =>
         {
@@ -317,7 +343,8 @@
             })
         // No segments otherwise.
         : [];
-    
+
+
     // Route junctions to render.
     $: route_junction_render_data = route_segment_render_data
         .reduce((data, segment) =>
@@ -346,24 +373,6 @@
             return data;
         }, [] as RouteJunctionRenderData[]);
 
-
-
-        // Extract first and last node.
-        // .map(segment =>
-        // {
-        //     return segment.nodes.filter((node, index) => (index === 0 || (index === segment.nodes.length - 1)));
-        // })
-        // .flat(1)
-        // // Remove duplicates.
-        // .filter((node, index, nodes) =>
-        // {
-        //     return nodes.indexOf(node) === index;
-        // })
-        // // Format.
-        // .map(node =>
-        // {
-        //     return ((): RouteJunctionRenderData => { return { node: node }; })();
-        // });
 
     // Course legs to render.
     $: course_leg_render_data = $courses[$course_index].segment("start", "finish")
@@ -403,7 +412,8 @@
         {
             return !pairAlreadyIncluded(leg, index, legs, "any");
         });
-    
+
+
     // Control numbers to render.
     $: control_number_render_data = [...$courses[$course_index].uniqueControls()]
         .filter(control =>
@@ -460,23 +470,4 @@
     {#each node_highlight_render_data as data (`RenderedNodeHighlight ${data.node.id}`)}
         <RenderedNodeHighlight {data}/>
     {/each}
-
-    <!-- {#each $map_graph.nodes as node (`DEBUG ${node.id}`)}
-        {#if node instanceof ControlMapNode}
-            <text
-                x={node.x}
-                y={node.y}
-                text-anchor="middle"
-                dominant-baseline="middle"
-                paint-order="stroke"
-                stroke="black"
-                stroke-opacity=1
-                stroke-width=8
-                fill="white"
-                fill-opacity=1
-                style="font-size: 64px;">
-                {node.id}
-            </text>
-        {/if}
-    {/each} -->
 </g>

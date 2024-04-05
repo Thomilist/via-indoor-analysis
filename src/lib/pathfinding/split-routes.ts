@@ -1,9 +1,31 @@
+/*
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
+
+
 import type { MapNode } from "$lib/map-graph/node";
 import { Route } from "$lib/map-graph/route";
 import { arrayPairEqualContent } from "$lib/utils/pairs";
 import { RouteSegmentRenderData } from "$lib/render/render-data";
 import { NodeTraffic } from "./node-traffic";
-
 
 
 function updateRouteSegmentDimming(segments: RouteSegmentRenderData[])
@@ -13,6 +35,7 @@ function updateRouteSegmentDimming(segments: RouteSegmentRenderData[])
         segments.forEach(segment => segment.dimmed = !segment.highlighted);
     }
 }
+
 
 // Note: All routes between same pair of controls must have same direction.
 function nodeTrafficMap(routes: Route[])
@@ -54,6 +77,7 @@ function nodeTrafficMap(routes: Route[])
     return node_traffic_map;
 }
 
+
 function nodesUntilJunction(node_traffic_map: Map<MapNode, NodeTraffic>, last: MapNode, current: MapNode)
 {
     const nodes: MapNode[] = [current];
@@ -75,6 +99,7 @@ function nodesUntilJunction(node_traffic_map: Map<MapNode, NodeTraffic>, last: M
 
     return nodes;
 }
+
 
 function withoutDuplicateSegments(segments: RouteSegmentRenderData[])
 {
@@ -104,6 +129,7 @@ function withoutDuplicateSegments(segments: RouteSegmentRenderData[])
 
     return unique_segments;
 }
+
 
 export function routeSegments(routes: Route[])
 {

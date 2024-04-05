@@ -1,3 +1,26 @@
+/*
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
+
+
 import { get } from "svelte/store";
 import type { MapMeta } from "./map";
 import { name } from "./names";
@@ -6,6 +29,7 @@ import type { Point } from "./utils/vector";
 import { ControlMapNode } from "./map-graph/node";
 import { browser } from "$app/environment";
 import { Route } from "./map-graph/route";
+
 
 export class ViewBox
 {
@@ -109,8 +133,10 @@ export class ViewBox
     }
 }
 
+
 export type PanDirection = "left" | "right" | "up" | "down";
 export type ZoomDirection = "in" | "out";
+
 
 export function paneRect(id: string)
 {
@@ -119,6 +145,7 @@ export function paneRect(id: string)
         return document.getElementById(id)?.getBoundingClientRect();
     }
 }
+
 
 export function mapPaneRect()
 {
@@ -145,6 +172,7 @@ export function mapPaneRect()
 
     return { full: map_pane_rect, visible: visible_map_pane_rect };
 }
+
 
 export function fitViewToCurrentLeg(control_padding: number)
 {
@@ -173,6 +201,7 @@ export function fitViewToCurrentLeg(control_padding: number)
     get(viewbox).fit(points);
     viewbox.update(v => v);
 }
+
 
 export function fitViewToMap()
 {

@@ -1,12 +1,38 @@
+/*
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
+
+
 import { Vector, type Point } from "$lib/utils/vector";
+
 
 // 60 degrees in equilateral triangle
 const angle = Math.PI / 3;
+
 
 export function polarToCartesian(distance: number, direction: number)
 {
     return { x: Math.cos(direction) * distance, y: Math.sin(direction) * distance };
 }
+
 
 export function svgTrianglePoints(center: Point, side_length: number, rotation?: number)
 {
@@ -26,6 +52,7 @@ export function svgTrianglePoints(center: Point, side_length: number, rotation?:
     return translated_points.flat().join(" ");
 }
 
+
 export function svgPolylinePoints(points: Point[])
 {
     return points
@@ -33,6 +60,7 @@ export function svgPolylinePoints(points: Point[])
         .flat()
         .join(" ");
 }
+
 
 export function svgQuadraticBezier(points: { a: Point, b: Point }, offset: Vector)
 {

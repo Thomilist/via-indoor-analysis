@@ -1,3 +1,26 @@
+/*
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
+
+
 import { ControlMapNode, WaypointMapNode } from "$lib/map-graph/node";
 import type { Path } from "$lib/map-graph/path";
 import { Route, RouteStep } from "$lib/map-graph/route";
@@ -7,6 +30,7 @@ import { isUturn } from "$lib/utils/misc";
 import { arrayPairEqualContent } from "$lib/utils/pairs";
 import { SortedSet } from "$lib/utils/sorted-set";
 import { get } from "svelte/store";
+
 
 export function findRoutes()
 {
@@ -57,6 +81,7 @@ export function findRoutes()
     const time = Date.now() - start_time;
     console.log(`Route finding complete (${time.valueOf()} ms)`);
 }
+
 
 function findRoutesForLeg(from: ControlMapNode, to: ControlMapNode, distance_threshold?: number)
 {
@@ -156,6 +181,7 @@ function findRoutesForLeg(from: ControlMapNode, to: ControlMapNode, distance_thr
     from.control_neighbours.set(to, shortest_routes);
 }
 
+
 function findShortestRoute(from: WaypointMapNode, to: WaypointMapNode, branching?: { last_path?: Path, excluded_paths: Set<Path>, excluded_waypoints: Set<WaypointMapNode> })
 {
     const unvisited_waypoints: Set<WaypointMapNode> = new Set();
@@ -232,6 +258,7 @@ function findShortestRoute(from: WaypointMapNode, to: WaypointMapNode, branching
     return;
 }
 
+
 function findControlNeighbours(control: ControlMapNode)
 {
     // Clear old relations.
@@ -249,6 +276,7 @@ function findControlNeighbours(control: ControlMapNode)
         }
     }
 }
+
 
 function findConnectedWaypoints(connected_waypoints: Set<WaypointMapNode>, next_waypoint: WaypointMapNode)
 {

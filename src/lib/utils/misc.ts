@@ -1,8 +1,32 @@
+/*
+
+via-indoor-analysis: Route choice analysis tool for indoor sprint 
+orienteering at VIA University College Horsens.
+Copyright (C) 2024 Thomas Emil Jensen
+
+via-indoor-analysis is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+via-indoor-analysis is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
+
+
 import { ControlMapNode, type MapNode } from "$lib/map-graph/node";
 import { courses, map_graph } from "$lib/state";
 import { get } from "svelte/store";
 import { Vector, type Point } from "./vector";
 import type { RouteSegmentRenderData } from "$lib/render/render-data";
+
 
 export function isArrayOfNumbers(value: any): value is number[]
 {
@@ -11,6 +35,7 @@ export function isArrayOfNumbers(value: any): value is number[]
         && value.every(item => typeof item === "number");
 }
 
+
 export function groupIncludesOther<Group extends T[] | Set<T> | Map<any, T>, T extends any>(group: Group, other: Group)
 {
     const group_array = [...group];
@@ -18,6 +43,7 @@ export function groupIncludesOther<Group extends T[] | Set<T> | Map<any, T>, T e
     
     return other_array.every(item => group_array.includes(item));
 }
+
 
 export function deleteNode(node: MapNode)
 {
@@ -34,10 +60,12 @@ export function deleteNode(node: MapNode)
     node.dropFromNeighbours();
 }
 
+
 export function numberRangeMapping(value: number, min1: number, max1: number, min2: number, max2: number)
 {
     return (value - min1) / (max1 - min1) * (max2 - min2) + min2;
 }
+
 
 export function directionChange(points: { a: Point, b: Point, c: Point })
 {
@@ -47,15 +75,18 @@ export function directionChange(points: { a: Point, b: Point, c: Point })
     return second.directionXY() - first.directionXY();
 }
 
+
 export function isUturn(points: { a: Point, b: Point, c: Point }, tolerance?: number)
 {
     return Math.cos(directionChange(points)) < (tolerance ?? -0.3);
 }
 
+
 export function radiusFromArc(chord_length: number, arc_height: number)
 {
     return ((chord_length ** 2) / (8 * arc_height) + (arc_height / 2));
 }
+
 
 export function powSelf(x: number, n: number)
 {
@@ -67,6 +98,7 @@ export function powSelf(x: number, n: number)
     return x;
 }
 
+
 export function averageHeight(points: Point[])
 {
     const total_height = points.reduce((sum, point) =>
@@ -76,6 +108,7 @@ export function averageHeight(points: Point[])
 
     return total_height / points.length;
 }
+
 
 export function isPortalRouteSegment(segment: RouteSegmentRenderData)
 {
