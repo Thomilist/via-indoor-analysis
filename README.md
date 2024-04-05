@@ -146,7 +146,7 @@ Stage 3 is much faster to compute, and is run for a single leg when that leg is 
 
 #### Stage 1: Paths between waypoints
 
-> Implemented in `src/lib/pathfinding/build-paths.ts`.
+> Implemented in [`src/lib/pathfinding/build-paths.ts`](src/lib/pathfinding/build-paths.ts).
 
 Strictly speaking, it is not necessary to distinguish between `Guides` and `Waypoints`, but they provide a layer of abstraction on top of the graph as a whole.
 This greatly simplifies decision making when finding route choices, significantly reducing computation time.
@@ -160,7 +160,7 @@ Only the shortest path to each neighbour is kept.
 
 #### Stage 2: Routes between controls
 
-> Implemented in `src/lib/pathfinding/build-routes.ts`.
+> Implemented in [`src/lib/pathfinding/build-routes.ts`](src/lib/pathfinding/build-routes.ts).
 
 Stage 2 is similar to stage 1, but this time, the abstraction level of the graph is raised one step up.
 Rather than finding the single shortest path through `Guides` between `Waypoints`, the aim now is to find routes through `Waypoints` between `Controls`, `Starts` and `Finishes`, including both the single shortest route, but also a variety of alternate routes.
@@ -198,7 +198,7 @@ the vast majority of computation time is spent here, because the pool of variant
 
 #### Stage 3: Filtering
 
-> Implemented in `src/lib/pathfinding/pick-routes.ts`.
+> Implemented in [`src/lib/pathfinding/pick-routes.ts`](src/lib/pathfinding/pick-routes.ts).
 
 Not all routes found in stage 2b are interesting.
 Most of them include meaningless detours that no human would ever deliberately take,
