@@ -167,12 +167,12 @@ Rather than finding the single shortest path through `Guides` between `Waypoints
 
 Stage 2 is performed once for every leg in the defined courses.
 
-##### Stage 2a: Shortest route choice
+##### &bull; _Stage 2a: Shortest route choice_
 
 In stage 2a, Dijkstra's algorithm is utilised once again.
 The search now originates at a `Control` or `Start`, and through the paths found in stage 1, the single shortest route to another `Control` or to a `Finish` is found.
 
-##### Stage 2b: Alternate route choices
+##### &bull; _Stage 2b: Alternate route choices_
 
 In stage 2b, alternate routes are found, as comparing different route choices is commonly of interest in orienteering.
 
@@ -210,20 +210,20 @@ the absolute shortest route, and the shortest route among the routes with the le
 "Up to" two, because the absolute shortest route often also has the least elevation gain, though not *always*.
 Beyond this, filtering is carried out in multiple steps.
 
-#### Stage 3a: Exclude duplicates
+##### &bull; _Stage 3a: Exclude duplicates_
 
 The first filter is very straightforward:
 duplicates are excluded.
 If two "different" routes contain the same points in the same order, they are obviously redundant, and only one should be kept.
 
-#### Stage 3b: Exclude outliers by distance
+##### &bull; _Stage 3b: Exclude outliers by distance_
 
 If most of the route variants are close in distance, but a few are significantly longer than the rest, chances are good that these outliers represent nonsensical route choices.
 
 To detect this, the median distance of the variants are found, and any variants exceeding a certain threshold relative to the median distance are discarded.
 This threshold is set to 1.2, or 120% of the median distance.
 
-#### Stage 3c: Exclude basic detours
+##### &bull; _Stage 3c: Exclude basic detours_
 
 What might in some cases present a meaningful obstacle or an interesting decision may in other cases be nothing more than an intuitive formality.
 
@@ -235,7 +235,7 @@ However, it is also possible to reach the same corner by going the *other* way a
 To detect such detours, the `Waypoints` of alternate routes are compared:
 If e.g. route A contains every `Waypoint` from route B in the same order, but then also contains one or more additional `Waypoints`, route A is discarded.
 
-#### Stage 3d: Filter by distance
+##### &bull; _Stage 3d: Filter by distance_
 
 The gist of this filter is that excessively long routes are discarded, but with more leeway if a long route has *less* elevation gain than the shortest route, and, of course, with *less* leeway in the opposite case.
 
@@ -263,7 +263,7 @@ For this consideration, the "mandatory distance" is excluded.
 A route may contain mandatory distance if one or both of the `Controls` it connects are located at dead ends in the graph.
 For such `Controls`, a portion of the route necessarily has *no* decisions whatsoever, meaning some of its distance is mandatory.
 
-#### Stage 3e: Filter by sameness
+##### &bull; _Stage 3e: Filter by sameness_
 
 Usually, most of the route variants on a given leg have a lot of overlap, meaning their comparatively trivial differences mostly serve as clutter, obscuring the more interesting variations.
 While the filtering in stage 3c takes care of the most egregious cases, more sophisticated filtering is still required.
@@ -345,7 +345,7 @@ In other words, alternate routes are limited in how much overlap they can have w
 
 As in stage 3d, "mandatory distance" is excluded from these considerations.
 
-#### Stage 3f: Exclude crossover detours
+##### &bull; _Stage 3f: Exclude crossover detours_
 
 The final filter is intended to catch a few instances of an edge case, where an intuitively poor route choice slips through the filters by virtue of being just different enough from the other routes - at least when compared to each in isolation - without adding *too* much distance.
 
