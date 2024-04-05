@@ -243,11 +243,21 @@ Comparison of a `route` to the `shortest_route` on the same leg uses their eleva
 
 Based on these parameters, an `weighted_threshold` is calculated to account for differences in elevation gain:
 
-$${weighted\_threshold}={{1}+{{\left({{threshold}-{1}}\right)}^{{\left({\frac{{1}+{route.elevation\_gain}}{{1}+{shortest\_route.elevation\_gain}}}\right)}^{2}}}}$$
+```math
+{weighted\_threshold}={{1}+{{\left({{threshold}-{1}}\right)}^{{\left({d}\right)}^{2}}}}
+```
+
+... where `d` is the following:
+
+```math
+{d}={\frac{{1}+{route.elevation\_gain}}{{1}+{shortest\_route.elevation\_gain}}}
+```
 
 This `weighted_threshold` is then used when comparing the distance of the `route` to that of the `shortest_route`, discarding the `route` if the following inequality is false:
 
-$${route.distance}<{{weighted\_threshold}\cdot{shortest\_route.distance}}$$
+```math
+{route.distance}<{{weighted\_threshold}\cdot{shortest\_route.distance}}
+```
 
 For this consideration, the "mandatory distance" is excluded.
 A route may contain mandatory distance if one or both of the `Controls` it connects are located at dead ends in the graph.
@@ -277,7 +287,9 @@ To determine `sameness`, the `shared_distance` between the two routes is calcula
 when two consecutive points in the `current_route` are also used in the same order in the `shorter_route`, the distance between them contributes to the `shared_distance`.
 The `sameness` of the `current_route` relative to the `shorter_route` is then calculated as follows:
 
-$${sameness}={\frac{shared\_distance}{shorter\_route.distance}}$$
+```math
+{sameness}={\frac{shared\_distance}{shorter\_route.distance}}
+```
 
 The `sameness` of the `current_route` is compared against two thresholds, and if *either* threshold is exceeded, the `current_route` is discarded.
 
@@ -290,7 +302,9 @@ These parameters attempt to describe how much worse the `current_route` is compa
 
 The `detour_ratio` describes the relative distance of the `current_route` versus the distance of the `shortest_route`:
 
-$${detour\_ratio}={\frac{current\_route.distance}{shortest\_route.distance}}$$
+```math
+{detour\_ratio}={\frac{current\_route.distance}{shortest\_route.distance}}
+```
 
 The `extra_elevation_gain` is how much *more* elevation gain (in whole floors) the `current_route` has compared  to the `shortest_route`, or 0 if it has the same or less elevation gain.
 
@@ -301,11 +315,15 @@ The implementation does indeed use distance thresholds of 40 and 50.
 
 The `weighted_max_sameness` is then calculated according to the following expression:
 
-$${weighted\_max\_sameness}={{0.95}^{\left({{1.3}\cdot{\mathrm{{\:\mathrm{powSelf}}}{\left({{detour\_ratio},\:{n}}\right)}}}\right)}}$$
+```math
+{weighted\_max\_sameness}={{0.95}^{\left({{1.3}\cdot{\mathrm{{\:\mathrm{powSelf}}}{\left({{detour\_ratio},\:{n}}\right)}}}\right)}}
+```
 
 ... in which the argument `n` involves the `extra_elevation_gain` and `short_leg_detour_penalty` like so:
 
-$${n}={{{1}+{{2}\cdot{extra\_elevation\_gain}}}+{{2}\cdot{short\_leg\_detour\_penalty}}}$$
+```math
+{n}={{{1}+{{2}\cdot{extra\_elevation\_gain}}}+{{2}\cdot{short\_leg\_detour\_penalty}}}
+```
 
 ... and the function `powSelf` is implemented in a way to *very* aggressively scale the `detour_ratio`:
 
