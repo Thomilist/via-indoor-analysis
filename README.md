@@ -1,9 +1,13 @@
 ![An example image showing three different route choices between the fourth and fifth controls on a course.](example.png)
 
+
+
 # via-indoor-analysis
 
 A route choice analysis tool for indoor sprint orienteering developed for a competition at VIA University College Horsens in March 2024.
 The route choices are not drawn manually, but are instead computed based on a graph representation of the map and courses.
+
+
 
 ## Usage
 
@@ -12,6 +16,7 @@ The modes include the main `View` and `Edit` modes, as well as a few submodes un
 
 The interface is available in both Danish and English, and a language switcher is located in the top right.
 
+
 ### View
 
 The `View` mode is the primary mode for end users, including, but not limited to, curious participants of the competition.
@@ -19,6 +24,7 @@ Users can select a course and cycle through its legs.
 For the selected leg, the relevant route choices are drawn on the map and listed in the control pane.
 In the list, the route choices are sorted by distance in ascending order, with their rank, colour, distance and elevation gain shown.
 Route choices can be highlighted on the map by selecting them in the list.
+
 
 ### Edit
 
@@ -111,9 +117,12 @@ Applying imported data overwrites the current state and runs path finding calcul
 An example made for the real event that the tool was made for is automatically imported and computed at page load.
 Reloading the page therefore restores the state to this example.
 
+
+
 ## Implementation
 
 The source code is of course available for anyone to see, but here are a few quick notes on the most interesting parts of the implementation.
+
 
 ### Path finding
 
@@ -324,3 +333,12 @@ The final filter is intended to catch a few instances of an edge case, where an 
 
 Specifically, if route A follows route B for some distance, then diverges and later follows route C, then route A may evade the sameness filter by sharing with *different* routes.
 If route A is then also longer than both B and C, then hopping between B and C is unlikely to be a good route choice, and route A is discarded.
+
+
+
+## Licensing
+
+The orienteering map of VIA University College Horsens, both in full at [`static/via-map.jpg`](static/via-map.jpg) and partially at [`example.png`](example.png), is under copyright belonging to [Horsens Orienteringsklub](https://horsensok.dk/) as detailed in [LICENSE.via-map.md](LICENSE.via-map.md).
+The map is not licensed to outside parties.
+
+The rest of the `via-indoor-analysis` repository is licensed under the copyleft [GNU AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html) or any later version. The full license text is included in [LICENSE.md](LICENSE.md).
