@@ -168,9 +168,9 @@ function excludeBasicDetours(routes: Route[])
     }
 }
 
-// If route X includes waypoint A from route Y and waypoint B from route Z,
-// but neither Y nor Z have both A and B, and route X is longer than Y and Z,
-// then discard route X.
+// If route A includes waypoint X from route B and waypoint Y from route C,
+// but neither B nor C have both X and Y, and route A is longer than B and C,
+// then discard route A.
 function excludeCrossoverDetours(routes: Route[])
 {
     if (routes.length < 3) { return; }
@@ -245,7 +245,8 @@ function excludeCrossoverDetours(routes: Route[])
 // Exclude pointlessly long routes.
 // For routes with equal elevation gain:
 // threshold = (distance of longest included route) / (distance of shortest route)
-// For long routes with extra elevation, the threshold is reduced for every floor extra.
+// For long routes with extra elevation, the threshold is reduced for every floor extra,
+// and vice versa with less elevation.
 function filterByDistance(routes: Route[], threshold: number)
 {
     if (routes.length === 0) { return; }
@@ -256,8 +257,8 @@ function filterByDistance(routes: Route[], threshold: number)
 
     const filtered_routes = routes.filter(route =>
     {
-        const adjusted_threshold = 1 + (threshold - 1) ** (((1 + route.elevation_gain) / (1 + shortest_route.elevation_gain)) ** 2);
-        return (route.distance.value() - mandatory_distance.value()) < (adjusted_threshold * (shortest_route.distance.value() - mandatory_distance.value()));
+        const weighted_threshold = 1 + (threshold - 1) ** (((1 + route.elevation_gain) / (1 + shortest_route.elevation_gain)) ** 2);
+        return (route.distance.value() - mandatory_distance.value()) < (weighted_threshold * (shortest_route.distance.value() - mandatory_distance.value()));
     });
 
     routes.splice(0, Infinity, ...filtered_routes);
@@ -291,7 +292,7 @@ function filterBySameness(routes: Route[], max_sameness: number)
             const shared_distance = Route.sharedDistance(shorter_route, current_route).value() - mandatory_distance;
             const sameness = shared_distance / (shorter_route.distance.value() - mandatory_distance);
             const detour_ratio = (current_route.distance.value() - mandatory_distance) / (shortest_distance);
-            const short_leg_detour_penalty = [20, 25].reduce((penalty, threshold) => { return Math.round(threshold / shortest_distance) + penalty; }, 0);
+            const short_leg_detour_penalty = [40, 50].reduce((penalty, threshold) => { return Math.floor(threshold / shortest_distance) + penalty; }, 0);
             const weighted_max_sameness = 0.95 ** (1.3 * powSelf(detour_ratio, (1 + 2 * extra_elevation_gain + 2 * short_leg_detour_penalty)));
 
             if (sameness > Math.min(max_sameness, weighted_max_sameness))
