@@ -7,8 +7,8 @@ import { via_map } from "$lib/state";
 
 const route_colours =
 [
-    "red",
     "blue",
+    "red",
     "green",
     "deeppink",
     "skyblue",
