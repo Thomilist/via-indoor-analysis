@@ -104,20 +104,20 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
                             align-items: center;
                         }
         
-                        &.number
+                        /* &.number
                         {
 
-                        }
+                        } */
         
                         &.distance-value
                         {
                             text-align: end;
                         }
         
-                        &.distance-unit
+                        /* &.distance-unit
                         {
                             
-                        }
+                        } */
         
                         &.elevation-value
                         {
