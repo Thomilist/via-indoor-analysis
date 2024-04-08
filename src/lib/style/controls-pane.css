@@ -29,13 +29,20 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 0.5em;
+    gap: 1em;
+    min-height: min-content;
 
     & .subpane
     {
         display: flex;
         flex-direction: column;
-        gap: 0.5em;
+        gap: 1em;
+
+        &.primary
+        {
+            min-height: 1px;
+            overflow-y: hidden;
+        }
     }
 
     & h2
@@ -51,6 +58,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     & hr
     {
         width: 100%;
-        color: black;
+        height: 1px;
+        min-height: 1px;
+        border: none;
+        background-color: gray;
+        margin: 0;
     }
 }

@@ -92,8 +92,6 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-<hr>
-
 <div id="view-controls">
     <div id="view-pan-controls">
         {#each pan_directions as direction}

@@ -38,7 +38,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <div class="controls pane" id={name.pane.controls}>
-    <div class="subpane">
+    <div class="subpane primary">
         {#if $mode === "Edit"}
             <EditControls/>
         {:else if $mode === "View"}
@@ -48,7 +48,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         <hr>
     </div>
 
-    <div class="subpane">
+    <div class="subpane secondary">
         <ViewportControls/>
     </div>
 </div>

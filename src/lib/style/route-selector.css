@@ -21,102 +21,115 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-table#route-selector
+.route-selector-container
 {
     --row-height: 1.5em;
-    border-collapse: collapse;
 
-    & thead
+    min-height: var(--row-height);
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    overflow: auto;
+    white-space: normal;
+
+    & table#route-selector
     {
-        border-bottom: 1px solid gray;
+        border-collapse: collapse;
 
-        & tr
+        & thead
         {
-            & td
-            {
-                &.highlight
-                {
-                    width: min-content;
-                }
+            position: sticky;
+            top: 0;
+            background-color: white;
 
-                &.route-choice-header
-                {
-                    width: 100%;
-                    text-align: start;
-                }
-            }
-        }
-    }
-
-    & tbody
-    {
-        & tr
-        {
-            &:nth-child(odd)
+            & tr
             {
-                background-color: rgb(230, 230, 230);
-            }
-
-            & label
-            {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-    
-                & div
+                & th
                 {
-                    display: flex;
-                    flex-direction: row;
-                    gap: 0.5em;
-                }
-    
-                & td
-                {
-                    height: var(--row-height);
-                    vertical-align: middle;
+                    border-bottom: 1px solid gray;
+                    font-weight: normal;
                     
                     &.highlight
                     {
-                        width: 1em;
-                        line-height: var(--row-height);
+                        width: min-content;
                     }
-    
-                    &.colour
+
+                    &.route-choice-header
                     {
-                        height: var(--row-height);
-                        width: 4em;
+                        width: 100%;
+                        text-align: start;
+                    }
+                }
+            }
+        }
+
+        & tbody
+        {
+            & tr
+            {
+                &:nth-child(odd)
+                {
+                    background-color: rgb(230, 230, 230);
+                }
+
+                & label
+                {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+        
+                    & div
+                    {
                         display: flex;
                         flex-direction: row;
+                        gap: 0.5em;
                         align-items: center;
                     }
-    
-                    &.number
+        
+                    & td
                     {
-                        line-height: var(--row-height);
-                    }
-    
-                    &.distance-value
-                    {
-                        line-height: var(--row-height);
-                        text-align: end;
-                    }
-    
-                    &.distance-unit
-                    {
-                        line-height: var(--row-height);
-                    }
-    
-                    &.elevation-value
-                    {
-                        line-height: var(--row-height);
-                        text-align: end;
-                    }
-    
-                    /* &.elevation-unit
-                    {
+                        height: fit-content;
                         
-                    } */
+                        &.highlight
+                        {
+                            width: 1em;
+                        }
+        
+                        &.colour
+                        {
+                            height: var(--row-height);
+                            width: 4em;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                        }
+        
+                        &.number
+                        {
+
+                        }
+        
+                        &.distance-value
+                        {
+                            text-align: end;
+                        }
+        
+                        &.distance-unit
+                        {
+                            
+                        }
+        
+                        &.elevation-value
+                        {
+                            
+                            text-align: end;
+                        }
+        
+                        &.elevation-unit
+                        {
+                            height: var(--row-height);
+                        }
+                    }
                 }
             }
         }
