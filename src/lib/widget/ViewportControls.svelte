@@ -22,10 +22,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
+    import { name } from "$lib/names";
     import { iof_print } from "$lib/render/iof";
     import PanDirectionSymbol from "$lib/render/symbol/PanDirectionSymbol.svelte";
     import { lang, mode, viewbox } from "$lib/state";
-    import { type PanDirection, type ZoomDirection, mapPaneRect, fitViewToCurrentLeg, fitViewToMap } from "$lib/viewbox";
+    import { type PanDirection, type ZoomDirection, fitViewToCurrentLeg, fitViewToMap, paneRect } from "$lib/viewbox";
 
 
     function pan(direction: PanDirection)
@@ -44,13 +45,13 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
     function zoom(direction: ZoomDirection)
     {
-        const map_pane_rect = mapPaneRect();
+        const map_pane_rect = paneRect(name.pane.map);
         if (!map_pane_rect) { return; }
 
         const scale = direction === "out" ? 1.2 : 1 / 1.2;
 
-        $viewbox.x += ($viewbox.width - $viewbox.width * scale) * (map_pane_rect.visible.width / 2) / map_pane_rect.full.width;
-        $viewbox.y += ($viewbox.height - $viewbox.height * scale) * (map_pane_rect.visible.height / 2) / map_pane_rect.full.height;
+        $viewbox.x += ($viewbox.width - $viewbox.width * scale) * (map_pane_rect.width / 2) / map_pane_rect.width;
+        $viewbox.y += ($viewbox.height - $viewbox.height * scale) * (map_pane_rect.height / 2) / map_pane_rect.height;
         $viewbox.width *= scale;
         $viewbox.height *= scale;
     }

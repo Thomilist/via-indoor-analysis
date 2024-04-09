@@ -25,9 +25,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { Distance } from "$lib/utils/distance";
     import { ControlMapNode, FinishControlMapNode, MapNode, StartControlMapNode, WaypointMapNode } from "$lib/map-graph/node";
     import { via_map, viewbox } from "$lib/state";
-    import { mapPaneRect } from "$lib/viewbox";
     import { iof_print } from "./iof";
     import type { NodeHighlightRenderData } from "./render-data";
+    import { name } from "$lib/names";
+    import { paneRect } from "$lib/viewbox";
 
 
     export let data: NodeHighlightRenderData;
@@ -56,7 +57,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     // Make partially transparent at high zoom levels.
     $: highlight_opacity = (() =>
     {
-        const map_pane_rect = mapPaneRect();
+        const map_pane_rect = paneRect(name.pane.map);
 
         if (map_pane_rect)
         {
@@ -73,9 +74,9 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             };
             
             const smallest_map_pane_dimension
-                = map_pane_rect.visible.height < map_pane_rect.visible.width
-                    ? map_pane_rect.visible.height
-                    : map_pane_rect.visible.width;
+                = map_pane_rect.height < map_pane_rect.width
+                    ? map_pane_rect.height
+                    : map_pane_rect.width;
 
             const size_fraction = ((normal_node_radius) * $via_map.width / $viewbox.width) / smallest_map_pane_dimension;
             

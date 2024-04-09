@@ -24,12 +24,12 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 <script lang="ts">
     import { add_node_height, add_node_type, course_index, courses, map_graph, edit_mode, mode, via_map, viewbox } from "$lib/state";
     import { ControlMapNode, FinishControlMapNode, StartControlMapNode } from "$lib/map-graph/node";
-    import { mapPaneRect } from "$lib/viewbox";
     import { name } from "$lib/names";
     import RenderedGraph from "$lib/render/RenderedGraph.svelte";
     import type { Point } from "$lib/utils/vector";
     import { deleteNode, numberRangeMapping } from "$lib/utils/misc";
     import { rerender, rr } from "$lib/render/rerender";
+    import { paneRect } from "$lib/viewbox";
 
 
     let mouse_moved: boolean = false;
@@ -38,19 +38,18 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
     function debugPrint(event: MouseEvent)
     {
-        const pane_rect = mapPaneRect();
+        const pane_rect = paneRect(name.pane.map);
         
         console.log(`DEBUG PRINT
         click: ${event.x} ${event.y}
-        rect/full: ${pane_rect?.full.width} ${pane_rect?.full.height}
-        rect/visible: ${pane_rect?.visible.width} ${pane_rect?.visible.height}
+        rect: ${pane_rect?.width} ${pane_rect?.height}
         vbox: ${$viewbox.serialise()}`);
     }
 
 
     function mapCoords(click: Pick<Point, "x" | "y">): Point
     {
-        const pane_rect = mapPaneRect()?.full;
+        const pane_rect = paneRect(name.pane.map);
 
         if (!pane_rect) { return { x: 0, y: 0, z: 0 }; }
 
@@ -65,7 +64,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     {
         if (event.buttons === 1)
         {
-            const pane_rect = mapPaneRect()?.full;
+            const pane_rect = paneRect(name.pane.map);
 
             if (!pane_rect) { return; }
 
@@ -78,7 +77,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     function zoom(event: WheelEvent)
     {
         const zoom_scale = event.deltaY > 0 ? 1.2 : 0.8;
-        const pane_rect = mapPaneRect()?.full;
+        const pane_rect = paneRect(name.pane.map);
 
         if (!pane_rect) { return; }
 
