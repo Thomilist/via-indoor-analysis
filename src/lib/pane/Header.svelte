@@ -27,20 +27,12 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import LanguageSelector from "$lib/widget/LanguageSelector.svelte";
     import ModeSelector from "$lib/widget/ModeSelector.svelte";
     import SourceLink from "$lib/widget/SourceLink.svelte";
-
-
-    const text =
-    {
-        DA: "VIA Indendørssprint: Vejvalgsanalyse",
-        EN: "VIA Indoor Sprint: Route Choice Analysis"
-    }
-    [$lang];
 </script>
 
 
 
 <svelte:head>
-    <title>{text}</title>
+    <title>{name.title[$lang]}</title>
 </svelte:head>
 
 
@@ -52,7 +44,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <div class="header pane" id={name.pane.header}>
-    <h1>{text}</h1>
+    <h1>{name.title[$lang]}</h1>
 
     <div class="header-items">
         <SourceLink/>

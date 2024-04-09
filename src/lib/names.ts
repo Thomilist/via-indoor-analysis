@@ -30,5 +30,10 @@ export const name =
         map: "map-pane",
         controls: "controls-pane",
         elevation: "elevation-pane"
+    },
+    title:
+    {
+        DA: "VIA Indendørssprint: Vejvalgsanalyse",
+        EN: "VIA Indoor Sprint: Route Choice Analysis"
     }
 };
