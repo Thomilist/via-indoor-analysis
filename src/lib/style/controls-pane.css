@@ -72,7 +72,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         display: grid;
         align-items: center;
         grid-template-columns: auto auto 1fr 100px auto;
-        grid-template-rows: minmax(0, 50%) auto min-content min-content min-content;
+        grid-template-rows: 1fr auto min-content min-content min-content;
         grid-template-areas: 
             "route-select route-select route-select route-select route-select"
             ". . . . ."

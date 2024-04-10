@@ -76,7 +76,6 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         {
             grid-area: controls;
             width: var(--controls-width);
-            height: calc(100vh - var(--header-height));
         }
     }
 
@@ -99,7 +98,6 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         {
             grid-area: controls;
             width: var(--controls-width);
-            height: calc(100vh - var(--header-height));
         }
     }
 
