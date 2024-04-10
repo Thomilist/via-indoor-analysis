@@ -21,6 +21,23 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
+.course-select
+{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+
+    /* Mobile, portrait or landscape */
+    @media (width < 800px) and (orientation: portrait), (height < 800px) and (orientation: landscape)
+    {
+        & label
+        {
+            display: none;
+        }
+    }
+}
+
+
 .course-create-delete
 {
     display: flex;

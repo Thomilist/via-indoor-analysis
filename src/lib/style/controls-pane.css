@@ -21,29 +21,15 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
+:global(.controls)
+{
+    --controls-padding: 1em;
+}
+
 .controls
 {
-    padding: 1em;
-    border-left: 2px solid black;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 1em;
-    min-height: min-content;
-
-    & .subpane
-    {
-        display: flex;
-        flex-direction: column;
-        gap: 1em;
-
-        &.primary
-        {
-            min-height: 1px;
-            overflow-y: hidden;
-        }
-    }
+    overflow: hidden;
+    min-height: 0;
 
     & h2
     {
@@ -63,5 +49,114 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         border: none;
         background-color: gray;
         margin: 0;
+    }
+
+    /* Mobile or desktop, landscape */
+    @media (height < 800px) and (orientation: landscape), (height >= 800px) and (orientation: landscape)
+    {
+        border-left: 2px solid black;
+    }
+
+    /* Mobile, portrait */
+    @media (width < 800px) and (orientation: portrait)
+    {
+        border-top: 1px solid black;
+    }
+
+    /* Mobile, portrait or landscape */
+    @media (width < 800px) and (orientation: portrait), (height < 800px) and (orientation: landscape)
+    {
+        padding: 0 0 0.2em;
+        gap: 0.2em var(--controls-padding);
+        max-width: 100%;
+        display: grid;
+        align-items: center;
+        grid-template-columns: auto auto 1fr 100px auto;
+        grid-template-rows: minmax(0, 50%) auto min-content min-content min-content;
+        grid-template-areas: 
+            "route-select route-select route-select route-select route-select"
+            ". . . . ."
+            ". course-select course-select leg-select ."
+            ". course-info course-info leg-select ."
+            ". source-link view-controls view-controls .";
+        
+        & *
+        {
+            min-width: 0;
+            min-height: 0;
+        }
+
+        & .course-select
+        {
+            grid-area: course-select;
+        }
+
+        & .course-information
+        {
+            grid-area: course-info;
+        }
+
+        & .leg-selector
+        {
+            grid-area: leg-select;
+        }
+
+        & .route-selector
+        {
+            grid-area: route-select;
+            align-self: start;
+            max-height: 100%;
+
+            &::before
+            {
+                content: "";
+                position: sticky;
+                top: 99%;
+                width: 100%;
+                height: 1px;
+                background-color: black;
+                z-index: 1;
+            }
+        }
+
+        & .source-link
+        {
+            grid-area: source-link;
+            color: blue;
+
+            & svg
+            {
+                fill: blue;
+            }
+        }
+
+        & .view-controls
+        {
+            grid-area: view-controls;
+        }
+        
+        & hr
+        {
+            display: none;
+        }
+    }
+
+    /* Desktop, portrait or landscape */
+    @media (width >= 800px) and (orientation: portrait), (height >= 800px) and (orientation: landscape)
+    {
+        padding: var(--controls-padding);
+        display: flex;
+        flex-direction: column;
+        gap: var(--controls-padding);
+
+        & .source-link
+        {
+            display: none;
+        }
+
+        & .view-controls
+        {
+            margin-top: auto;
+        }
     }
 }

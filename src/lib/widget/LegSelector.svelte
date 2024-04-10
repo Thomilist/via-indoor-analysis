@@ -92,15 +92,15 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-<div id="leg-selector">
-    <label id="leg-select-previous">
+<div class="leg-selector">
+    <label class="leg-select-previous">
         <button class="leg-select-button" on:click={previous}></button>
         <PanDirectionSymbol direction="left" size={28}/>
     </label>
     
     <output>{`${leg_label.a} - ${leg_label.b}`}</output>
     
-    <label id="leg-select-next">
+    <label class="leg-select-next">
         <button class="leg-select-button" on:click={next}></button>
         <PanDirectionSymbol direction="right" size={28}/>
     </label>

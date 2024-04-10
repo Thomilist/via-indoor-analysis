@@ -21,76 +21,105 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-#view-controls
+.view-controls
 {
-    display: grid;
-    grid-template-areas: 
-        "pan zoom"
-        "fit fit";
-    gap: 0.5em;
-    place-content: center;
-    place-items: center;
-
-    & #view-pan-controls
+    & .view-fit-controls
     {
-        width: min-content;
-        height: min-content;
-        display: grid;
-        grid-template-areas: 
-            ". up ."
-            "left . right"
-            ". down .";
-        gap: 0;
-        
-        & .view-pan-button
+        display: flex;
+        gap: 0.5em;
+    }
+
+    /* Mobile, portrait or landscape */
+    @media (width < 800px) and (orientation: portrait), (height < 800px) and (orientation: landscape)
+    {
+        & .view-pan-controls, .view-zoom-controls
         {
             display: none;
         }
-    
-        & #view-pan-left
+
+        & .view-fit-controls
         {
-            grid-area: left;
-        }
-    
-        & #view-pan-up
-        {
-            grid-area: up;
-        }
-    
-        & #view-pan-down
-        {
-            grid-area: down;
-        }
-    
-        & #view-pan-right
-        {
-            grid-area: right;
+            flex-direction: row;
+            align-items: center;
+            justify-content: end;
+
+            & button
+            {
+                width: 100px;
+            }
         }
     }
 
-    & #view-zoom-controls
+    /* Desktop, portrait or landscape */
+    @media (width >= 800px) and (orientation: portrait), (height >= 800px) and (orientation: landscape)
     {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-areas: 
+            "pan zoom"
+            "fit fit";
         gap: 0.5em;
+        place-content: center;
+        place-items: center;
+
+        & .view-pan-controls
+        {
+            width: min-content;
+            height: min-content;
+            display: grid;
+            grid-template-areas: 
+                ". up ."
+                "left . right"
+                ". down .";
+            gap: 0;
+            
+            & .view-pan-button
+            {
+                display: none;
+            }
         
-        & .view-zoom-button
-        {
-            width: 2em;
-            height: 2em;
-            font-weight: 900;
-            font-size: 1.5em;
-            margin: 0;
-            padding: 0;
+            & .view-pan-left
+            {
+                grid-area: left;
+            }
+        
+            & .view-pan-up
+            {
+                grid-area: up;
+            }
+        
+            & .view-pan-down
+            {
+                grid-area: down;
+            }
+        
+            & .view-pan-right
+            {
+                grid-area: right;
+            }
         }
-    }
 
-    & #view-fit-controls
-    {
-        grid-area: fit;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5em;
+        & .view-zoom-controls
+        {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
+            
+            & .view-zoom-button
+            {
+                width: 2em;
+                height: 2em;
+                font-weight: 900;
+                font-size: 1.5em;
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        & .view-fit-controls
+        {
+            grid-area: fit;
+            flex-direction: column;
+            width: 100%;
+        }
     }
 }

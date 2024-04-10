@@ -34,7 +34,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-<select bind:value={$mode}>
+<select class="mode-selector" bind:value={$mode}>
     {#each options as option}
         <option value={option.value}>{option[$lang]}</option>
     {/each}

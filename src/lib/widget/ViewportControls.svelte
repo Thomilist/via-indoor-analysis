@@ -93,24 +93,24 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-<div id="view-controls">
-    <div id="view-pan-controls">
+<div class="view-controls">
+    <div class="view-pan-controls">
         {#each pan_directions as direction}
-            <label id="view-pan-{direction}">
+            <label class="view-pan-{direction}">
                 <button class="view-pan-button" on:click={() => pan(direction)}></button>
                 <PanDirectionSymbol {direction} size={40}/>
             </label>
         {/each}
     </div>
 
-    <div id="view-zoom-controls">
+    <div class="view-zoom-controls">
         {#each zoom_directions as direction}
-            <button class="view-zoom-button" id="view-zoom-{direction.value}" on:click={() => zoom(direction.value)}>{direction.label}</button>
+            <button class="view-zoom-button {direction.value}" on:click={() => zoom(direction.value)}>{direction.label}</button>
         {/each}
     </div>
 
-    <div id="view-fit-controls">
-        <button id="view-fit" on:click={fit}>{({DA: "Tilpas visning", EN: "Fit view"}[$lang])}</button>
-        <button id="view-reset" on:click={reset}>{({DA: "Nulstil visning", EN: "Reset view"}[$lang])}</button>
+    <div class="view-fit-controls">
+        <button class="view-fit" on:click={fit}>{({DA: "Tilpas visning", EN: "Fit view"}[$lang])}</button>
+        <button class="view-reset" on:click={reset}>{({DA: "Nulstil visning", EN: "Reset view"}[$lang])}</button>
     </div>
 </div>

@@ -24,6 +24,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 <script lang="ts">
     import { Route } from "$lib/map-graph/route";
     import { rerender } from "$lib/render/rerender";
+    import UpstairsSymbol from "$lib/render/symbol/UpstairsSymbol.svelte";
     import { current_routes, lang } from "$lib/state";
 </script>
 
@@ -35,8 +36,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-<div class="route-selector-container">
-    <table id="route-selector">
+<div class="route-selector">
+    <table class="route-selector-table">
         <thead>
             <tr>
                 <div>
@@ -86,7 +87,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
                             </td>
     
                             <td class="elevation-unit">
-                                ↑
+                                <UpstairsSymbol/>
                             </td>
                         </div>
                     </label>

@@ -24,12 +24,36 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 .course-information
 {
     display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 0.2em 0.5em;
-    margin: 0 2em;
+    margin: 0;
+
+    & .label
+    {
+        grid-column: 2;
+    }
 
     & .value
     {
+        grid-column: 4;
         text-align: end;
+    }
+
+    & .unit
+    {
+        grid-column: 5;
+    }
+
+    /* Mobile, portrait or landscape */
+    @media (width < 800px) and (orientation: portrait), (height < 800px) and (orientation: landscape)
+    {
+        grid-template-columns: auto auto 3em auto auto 1fr;
+        gap: 0.1em 0.5em;
+        font-size: small;
+    }
+
+    /* Desktop, portrait or landscape */
+    @media (width >= 800px) and (orientation: portrait), (height >= 800px) and (orientation: landscape)
+    {
+        grid-template-columns: 1fr auto 3em auto auto 1fr;
+        gap: 0.2em 0.5em;
     }
 }

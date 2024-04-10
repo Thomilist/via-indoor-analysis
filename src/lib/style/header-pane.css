@@ -33,6 +33,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     {
         margin: 0;
         color: white;
+        font-size: x-large;
     }
 
     & .header-items
@@ -44,6 +45,30 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         & *
         {
             height: min-content;
+        }
+
+        & .source-link
+        {
+            color: white;
+
+            & svg
+            {
+                fill: white;
+            }
+        }
+    }
+
+    /* Mobile, portrait or landscape */
+    @media (width < 800px) and (orientation: portrait), (height < 800px) and (orientation: landscape)
+    {
+        & h1
+        {
+            font-size: small;
+        }
+
+        & .mode-selector, .source-link
+        {
+            display: none;
         }
     }
 }

@@ -38,11 +38,6 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     margin: 0;
     padding: 0;
     overflow: hidden;
-}
-
-
-:global(body)
-{
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
 }

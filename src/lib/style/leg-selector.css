@@ -21,20 +21,63 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-#leg-selector
+.leg-selector
 {
     display: grid;
-    grid-template-columns: auto 1fr auto;
     justify-content: center;
-    gap: 1em;
+
+    /* Mobile, portrait or landscape */
+    @media (width < 800px) and (orientation: portrait), (height < 800px) and (orientation: landscape)
+    {
+        gap: 0.5em var(--controls-padding);
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas: 
+            "current current"
+            "previous next";
+
+        & .leg-select-previous
+        {
+            justify-self: center;
+        }
+
+        & .leg-select-next
+        {
+            justify-self: center;
+        }
+
+        & label
+        {
+            transform: scale(1.25);
+        }
+    }
+
+    /* Desktop, portrait or landscape */
+    @media (width >= 800px) and (orientation: portrait), (height >= 800px) and (orientation: landscape)
+    {
+        gap: var(--controls-padding);
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "previous current next";
+    }
 
     & output
     {
+        grid-area: current;
         border: 1px solid gray;
         border-radius: 5px;
         display: flex;
         align-items: center;
         justify-content: space-around;
+    }
+
+    & .leg-select-previous
+    {
+        grid-area: previous;
+    }
+
+    & .leg-select-next
+    {
+        grid-area: next;
     }
 
     & label

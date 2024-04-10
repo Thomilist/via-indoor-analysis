@@ -21,32 +21,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-<script lang="ts">
-    import { name } from "$lib/names";
-    import { mode } from "$lib/state";
-    import EditControls from "$lib/widget/EditControls.svelte";
-    import SourceLink from "$lib/widget/SourceLink.svelte";
-    import ViewControls from "$lib/widget/ViewControls.svelte";
-    import ViewportControls from "$lib/widget/ViewportControls.svelte";
-</script>
-
-
-
-<style>
-    @import "$lib/style/controls-pane.css";
-</style>
-
-
-
-<div class="controls pane" id={name.pane.controls}>
-    {#if $mode === "Edit"}
-        <EditControls/>
-    {:else if $mode === "View"}
-        <ViewControls/>
-    {/if}
-    
-    <hr>
-
-    <SourceLink/>
-    <ViewportControls/>
-</div>
+<svg viewBox="0 0 100 100" style="display: inline-block; width: 1em; height: 1em;">
+    <path d="M 10 90 h 20 v -20 h 20 v -20 h 20 v -20 h 20"></path>
+    <path d="M 15 50 l 40 -40"></path>
+    <path d="M 35 10 h 20 v 20"></path>
+</svg>

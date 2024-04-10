@@ -68,15 +68,17 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-<label class="single-labeled-input stacked">
-    {({DA: "Vælg bane:", EN: "Select course:"}[$lang])}
-
-    <select bind:value={$course_index} on:change={rerender}>
+<div class="course-select">
+    <label class="single-labeled-input stacked" for="course-selector">
+        {({DA: "Vælg bane:", EN: "Select course:"}[$lang])}
+    </label>
+    
+    <select id="course-selector" bind:value={$course_index} on:change={rerender}>
         {#each $courses as course, index (course.id)}
             <option value={index}>{`${course.name}`}</option>
         {/each}
     </select>
-</label>
+</div>
 
 
 {#if $mode === "Edit"}

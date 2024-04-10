@@ -23,15 +23,28 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 a.source-link
 {
-    text-decoration: none;
+    padding: 0.5em;
     font-size: small;
-    color: white;
     display: flex;
     align-items: center;
     gap: 0.2em;
 
-    & svg
+    /* Mobile or desktop, landscape */
+    @media (height < 800px) and (orientation: landscape), (height >= 800px) and (orientation: landscape)
     {
-        fill: white;
+        text-decoration: underline;
     }
+
+    /* Desktop, portrait or landscape */
+    @media (width >= 800px) and (orientation: portrait), (height >= 800px) and (orientation: landscape)
+    {
+        text-decoration: none;
+
+        &:hover
+        {
+            text-decoration: underline;
+        }
+    }
+
+    
 }

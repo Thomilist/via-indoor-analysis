@@ -25,23 +25,82 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 {
     --header-height: 50px;
     --controls-width: 320px;
-    --elevation-height: 160px;
+    --controls-height-mobile: 250px;
+    /* --elevation-height: 160px; */
+    
+    width: 100%;
+    height: 100%;
 
     display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto 1fr;
-    grid-template-areas: 
-        "header header"
-        "map controls"
-        "elevation controls";
-    width: 100vw;
-    height: 100vh;
-    
 
-    & .header
+    /* Mobile, portrait */
+    @media (width < 800px) and (orientation: portrait)
     {
-        grid-area: header;
-        height: var(--header-height);
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas: 
+            "header"
+            "map"
+            "controls";
+    
+        & .header
+        {
+            grid-area: header;
+            height: calc(var(--header-height) * 0.6);
+        }
+        
+        & .controls
+        {
+            grid-area: controls;
+            height: var(--controls-height-mobile);
+        }
+    }
+
+    /* Mobile, landscape */
+    @media (height < 800px) and (orientation: landscape)
+    {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto 1fr;
+        grid-template-areas: 
+            "map header"
+            "map controls";
+        
+        & .header
+        {
+            grid-area: header;
+            width: var(--controls-width);
+            height: calc(var(--header-height) * 0.6);
+        }
+        
+        & .controls
+        {
+            grid-area: controls;
+            width: var(--controls-width);
+            height: calc(100vh - var(--header-height));
+        }
+    }
+
+    /* Desktop, portrait or landscape */
+    @media (width >= 800px) and (orientation: portrait), (height >= 800px) and (orientation: landscape)
+    {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto 1fr;
+        grid-template-areas: 
+            "header header"
+            "map controls";
+        
+        & .header
+        {
+            grid-area: header;
+            height: var(--header-height);
+        }
+        
+        & .controls
+        {
+            grid-area: controls;
+            width: var(--controls-width);
+            height: calc(100vh - var(--header-height));
+        }
     }
 
     & .map
@@ -52,16 +111,9 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         min-height: 0;
     }
 
-    & .controls
-    {
-        grid-area: controls;
-        width: var(--controls-width);
-        height: calc(100vh - var(--header-height));
-    }
-
-    & .elevation-plot
+    /* & .elevation-plot
     {
         grid-area: elevation;
         height: var(--elevation-height);
-    }
+    } */
 }
