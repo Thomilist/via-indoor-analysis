@@ -29,7 +29,7 @@ import type { Point } from "./utils/vector";
 import { ControlMapNode } from "./map-graph/node";
 import { browser } from "$app/environment";
 import { Route } from "./map-graph/route";
-import { tweened, type Tweened } from "svelte/motion";
+import { tweened, type Tweened, type TweenedOptions } from "svelte/motion";
 import { quadInOut } from "svelte/easing";
 
 
@@ -40,10 +40,11 @@ export class ViewBox
     #initial_width: number;
     #initial_height: number;
 
-    static tweening = { duration: 400, easing: quadInOut };
+    static tween_smooth = { duration: 400, easing: quadInOut };
+    static tween_fast = { duration: 0 };
 
-    x: Tweened<number> = tweened(0, ViewBox.tweening);
-    y: Tweened<number> = tweened(0, ViewBox.tweening);
+    x: Tweened<number> = tweened(0, ViewBox.tween_smooth);
+    y: Tweened<number> = tweened(0, ViewBox.tween_smooth);
     width: Tweened<number>;
     height: Tweened<number>;
 
@@ -51,8 +52,8 @@ export class ViewBox
     {
         this.#initial_width = map.width;
         this.#initial_height = map.height;
-        this.width = tweened(this.#initial_width, ViewBox.tweening);
-        this.height = tweened(this.#initial_height, ViewBox.tweening);
+        this.width = tweened(this.#initial_width, ViewBox.tween_smooth);
+        this.height = tweened(this.#initial_height, ViewBox.tween_smooth);
     }
 
     getX() { return get(this.x); }
@@ -154,10 +155,12 @@ export class ViewBox
         }
     }
 
-    pan2D(offset: Pick<Point, "x" | "y">)
+    pan2D(offset: Pick<Point, "x" | "y">, tweening?: TweenedOptions<number>)
     {
-        this.x.update(x => x - offset.x);
-        this.y.update(y => y - offset.y);
+        tweening = tweening ?? ViewBox.tween_fast;
+
+        this.x.update(x => x - offset.x, tweening);
+        this.y.update(y => y - offset.y, tweening);
     }
 
     zoom(direction: ZoomDirection, scaling?: number)

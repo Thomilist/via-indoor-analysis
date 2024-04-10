@@ -29,7 +29,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import type { Point } from "$lib/utils/vector";
     import { deleteNode, numberRangeMapping } from "$lib/utils/misc";
     import { rerender, rr } from "$lib/render/rerender";
-    import { paneRect } from "$lib/viewbox";
+    import { ViewBox, paneRect } from "$lib/viewbox";
 
 
     let mouse_moved: boolean = false;
@@ -86,10 +86,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
         const map_offset = mapCoords({ x: event.offsetX, y: event.offsetY });
 
-        $viewbox.x.update(x => x + ($viewbox.getWidth() - $viewbox.getWidth() * zoom_scale) * (map_offset.x - $viewbox.getX()) / $viewbox.getWidth());
-        $viewbox.y.update(y => y + ($viewbox.getHeight() - $viewbox.getHeight() * zoom_scale) * (map_offset.y - $viewbox.getY()) / $viewbox.getHeight());
-        $viewbox.width.update(w => w * zoom_scale);
-        $viewbox.height.update(h => h * zoom_scale);
+        $viewbox.x.update(x => x + ($viewbox.getWidth() - $viewbox.getWidth() * zoom_scale) * (map_offset.x - $viewbox.getX()) / $viewbox.getWidth(), ViewBox.tween_fast);
+        $viewbox.y.update(y => y + ($viewbox.getHeight() - $viewbox.getHeight() * zoom_scale) * (map_offset.y - $viewbox.getY()) / $viewbox.getHeight(), ViewBox.tween_fast);
+        $viewbox.width.update(w => w * zoom_scale, ViewBox.tween_fast);
+        $viewbox.height.update(h => h * zoom_scale, ViewBox.tween_fast);
     }
 
 
