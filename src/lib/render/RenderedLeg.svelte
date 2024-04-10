@@ -22,8 +22,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
-    import { FinishControlMapNode, type ControlMapNode } from "$lib/map-graph/node";
-    import { mode } from "$lib/state";
+    import { FinishControlMapNode, type ControlMapNode, StartControlMapNode } from "$lib/map-graph/node";
     import { Vector } from "$lib/utils/vector";
     import { iof_print } from "./iof";
     import type { CourseLegRenderData } from "./render-data";
@@ -57,6 +56,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         {
             return iof_print.finish_radius_outer + 2 * iof_print["stroke-width"];
         }
+        else if (control instanceof StartControlMapNode)
+        {
+            return iof_print.start_side_length / 2 + 1.3825 * iof_print["stroke-width"];
+        }
         else
         {
             return iof_print.control_radius + 2 * iof_print["stroke-width"];
@@ -73,13 +76,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-{#if $mode === "View"}
-    <line
-        x1={vector_ab_offset.a.x} y1={vector_ab_offset.a.y}
-        x2={vector_ab_offset.b.x} y2={vector_ab_offset.b.y}
-        {...outline_attributes}
-    />
-{/if}
+<line
+    x1={vector_ab_offset.a.x} y1={vector_ab_offset.a.y}
+    x2={vector_ab_offset.b.x} y2={vector_ab_offset.b.y}
+    {...outline_attributes}
+/>
 
 
 <line
