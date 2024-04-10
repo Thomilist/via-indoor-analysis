@@ -60,36 +60,107 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     }
 
 
-    function pan(event: MouseEvent)
+    const active_pointers: Map<number, Pick<Point, "x" | "y">> = new Map();
+
+
+    function pointerPan(event: PointerEvent)
     {
-        if (event.buttons === 1)
+        if (event.pointerType === "mouse" && event.buttons === 1)
         {
-            const pane_rect = paneRect(name.pane.map);
-
-            if (!pane_rect) { return; }
-
-            $viewbox.pan2D
-            ({
-                x: event.movementX * ($viewbox.getWidth() / pane_rect.width),
-                y: event.movementY * ($viewbox.getHeight() / pane_rect.height)
-            });
+            panMap({ x: event.movementX, y: event.movementY });
         }
+        else if (event.pointerType !== "mouse" && active_pointers.size === 1)
+        {
+            const last_position = active_pointers.get(event.pointerId) ?? { x: event.x, y: event.y };
+            const movement = { x: event.x - last_position.x, y: event.y - last_position.y };
+            panMap(movement);
+        }
+
+        active_pointers.set(event.pointerId, event);
     }
 
 
-    function zoom(event: WheelEvent)
+    function panMap(screen_movement: Pick<Point, "x" | "y">)
     {
-        const zoom_scale = event.deltaY > 0 ? 1.2 : 0.8;
         const pane_rect = paneRect(name.pane.map);
 
         if (!pane_rect) { return; }
 
-        const map_offset = mapCoords({ x: event.offsetX, y: event.offsetY });
+        $viewbox.pan2D
+        ({
+            x: screen_movement.x * ($viewbox.getWidth() / pane_rect.width),
+            y: screen_movement.y * ($viewbox.getHeight() / pane_rect.height)
+        });
+    }
 
-        $viewbox.x.update(x => x + ($viewbox.getWidth() - $viewbox.getWidth() * zoom_scale) * (map_offset.x - $viewbox.getX()) / $viewbox.getWidth(), ViewBox.tween_fast);
-        $viewbox.y.update(y => y + ($viewbox.getHeight() - $viewbox.getHeight() * zoom_scale) * (map_offset.y - $viewbox.getY()) / $viewbox.getHeight(), ViewBox.tween_fast);
-        $viewbox.width.update(w => w * zoom_scale, ViewBox.tween_fast);
-        $viewbox.height.update(h => h * zoom_scale, ViewBox.tween_fast);
+
+    function pinchZoom(event: PointerEvent)
+    {
+        if (active_pointers.size === 2)
+        {
+            const a_old = active_pointers.get(event.pointerId) ?? { x: event.x, y: event.y };
+            const a_new: Pick<Point, "x" | "y"> = { x: event.x, y: event.y };
+            let b: Pick<Point, "x" | "y"> = { x: event.x, y: event.y };
+
+            active_pointers.forEach((position, pointerId) =>
+            {
+                if (pointerId !== event.pointerId)
+                {
+                    b = position;
+                }
+            });
+
+            const old_distance = Math.sqrt(((b.x - a_old.x) ** 2) + ((b.y - a_old.y) ** 2));
+            const new_distance = Math.sqrt(((b.x - a_new.x) ** 2) + ((b.y - a_new.y) ** 2));
+            const scale = old_distance / new_distance;
+
+            const old_center: Pick<Point, "x" | "y"> =
+            {
+                x: (b.x + a_old.x) / 2,
+                y: (b.y + a_old.y) / 2
+            };
+
+            const new_center: Pick<Point, "x" | "y"> =
+            {
+                x: (b.x + a_new.x) / 2,
+                y: (b.y + a_new.y) / 2
+            };
+
+            const offset: Pick<Point, "x" | "y"> =
+            {
+                x: new_center.x - old_center.x,
+                y: new_center.y - old_center.y
+            };
+
+            panMap(offset);
+            zoomMap(new_center, scale);
+        }
+
+        active_pointers.set(event.pointerId, event);
+    }
+
+
+    function wheelZoom(event: WheelEvent)
+    {
+        const center = { x: event.offsetX, y: event.offsetY };
+        const scale = event.deltaY > 0 ? 1.2 : 1 / 1.2;
+
+        zoomMap(center, scale);
+    }
+
+
+    function zoomMap(center: Pick<Point, "x" | "y">, scale: number)
+    {
+        const pane_rect = paneRect(name.pane.map);
+
+        if (!pane_rect) { return; }
+
+        const map_offset = mapCoords(center);
+
+        $viewbox.x.update(x => x + ($viewbox.getWidth() - $viewbox.getWidth() * scale) * (map_offset.x - $viewbox.getX()) / $viewbox.getWidth(), ViewBox.tween_fast);
+        $viewbox.y.update(y => y + ($viewbox.getHeight() - $viewbox.getHeight() * scale) * (map_offset.y - $viewbox.getY()) / $viewbox.getHeight(), ViewBox.tween_fast);
+        $viewbox.width.update(w => w * scale, ViewBox.tween_fast);
+        $viewbox.height.update(h => h * scale, ViewBox.tween_fast);
     }
 
 
@@ -224,23 +295,42 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     }
 
 
-    function handleMouseDown(event: MouseEvent)
+    function handlePointerDown(event: PointerEvent)
     {
         event.preventDefault();
         mouse_moved = false;
+        active_pointers.set(event.pointerId, event);
         rerender(event);
     }
 
 
-    function handleMouseMove(event: MouseEvent)
+    function handlePointerUp(event: PointerEvent)
     {
+        event.preventDefault();
+        active_pointers.delete(event.pointerId);
+    }
+
+
+    function handlePointerMove(event: PointerEvent)
+    {
+        event.preventDefault();
         mouse_moved = true;
-        pan(event);
-        const hover_changed = highlightNodeUnderMouse(event);
-        
-        if (hover_changed)
+
+        switch (active_pointers.size)
         {
-            rerender(event);
+            case 1: pointerPan(event); break;
+            case 2: pinchZoom(event); break;
+            default: break;
+        }
+        
+        if (event.pointerType === "mouse")
+        {
+            const hover_changed = highlightNodeUnderMouse(event);
+        
+            if (hover_changed)
+            {
+                rerender(event);
+            }
         }
     }
 
@@ -300,7 +390,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
     function handleWheel(event: WheelEvent)
     {
-        zoom(event);
+        wheelZoom(event);
 
         if (hovered_node !== -1)
         {
@@ -336,9 +426,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         role="none"
         viewBox={viewbox_string}
         on:click={handleLeftClick}
-        on:mousemove={handleMouseMove}
+        on:pointerdown={handlePointerDown}
+        on:pointerup={handlePointerUp}
+        on:pointermove={handlePointerMove}
         on:wheel={handleWheel}
-        on:mousedown={handleMouseDown}
         on:contextmenu={handleRightClick}>
         <image {...$via_map.attributes()}/>
 

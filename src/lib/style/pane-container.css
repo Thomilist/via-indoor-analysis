@@ -107,6 +107,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         overflow: clip;
         min-width: 0;
         min-height: 0;
+        touch-action: none;
     }
 
     /* & .elevation-plot
