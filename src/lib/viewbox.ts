@@ -29,6 +29,8 @@ import type { Point } from "./utils/vector";
 import { ControlMapNode } from "./map-graph/node";
 import { browser } from "$app/environment";
 import { Route } from "./map-graph/route";
+import { tweened, type Tweened } from "svelte/motion";
+import { quadInOut } from "svelte/easing";
 
 
 export class ViewBox
@@ -38,30 +40,37 @@ export class ViewBox
     #initial_width: number;
     #initial_height: number;
 
-    x: number = 0;
-    y: number = 0;
-    width: number;
-    height: number;
+    static tweening = { duration: 400, easing: quadInOut };
+
+    x: Tweened<number> = tweened(0, ViewBox.tweening);
+    y: Tweened<number> = tweened(0, ViewBox.tweening);
+    width: Tweened<number>;
+    height: Tweened<number>;
 
     constructor(map: MapMeta)
     {
         this.#initial_width = map.width;
         this.#initial_height = map.height;
-        this.width = this.#initial_width;
-        this.height = this.#initial_height;
+        this.width = tweened(this.#initial_width, ViewBox.tweening);
+        this.height = tweened(this.#initial_height, ViewBox.tweening);
     }
+
+    getX() { return get(this.x); }
+    getY() { return get(this.y); }
+    getWidth() { return get(this.width); }
+    getHeight() { return get(this.height); }
 
     serialise()
     {
-        return `${this.x} ${this.y} ${this.width} ${this.height}`
+        return `${this.getX()} ${this.getY()} ${this.getWidth()} ${this.getHeight()}`;
     }
 
     reset()
     {
-        this.x = this.#initial_x;
-        this.y = this.#initial_y;
-        this.width = this.#initial_width;
-        this.height = this.#initial_height;
+        this.x.set(this.#initial_x);
+        this.y.set(this.#initial_y);
+        this.width.set(this.#initial_width);
+        this.height.set(this.#initial_height);
     }
 
     fit(points?: Point[], margin?: number)
@@ -109,27 +118,64 @@ export class ViewBox
         // Bounding box too wide for map pane.
         if (bounds_aspect_ratio > map_pane_aspect_ratio)
         {
-            this.width = bounds.width * map_pane_rect.width / map_pane_rect.width;
-            this.height = bounds.width / map_pane_aspect_ratio;
-            this.x = bounds.x;
-            this.y = bounds.y - (bounds.width / map_pane_aspect_ratio) / 2 + bounds.height / 2;
+            this.width.set(bounds.width * map_pane_rect.width / map_pane_rect.width);
+            this.height.set(bounds.width / map_pane_aspect_ratio);
+            this.x.set(bounds.x);
+            this.y.set(bounds.y - (bounds.width / map_pane_aspect_ratio) / 2 + bounds.height / 2);
         }
         // Bounding box too tall for map pane.
         else if (bounds_aspect_ratio < map_pane_aspect_ratio)
         {
-            this.width = bounds.height * map_pane_aspect_ratio;
-            this.height = bounds.height * map_pane_rect.height / map_pane_rect.height;
-            this.x = bounds.x - (bounds.height * map_pane_aspect_ratio) / 2 + bounds.width / 2;
-            this.y = bounds.y;
+            this.width.set(bounds.height * map_pane_aspect_ratio);
+            this.height.set(bounds.height * map_pane_rect.height / map_pane_rect.height);
+            this.x.set(bounds.x - (bounds.height * map_pane_aspect_ratio) / 2 + bounds.width / 2);
+            this.y.set(bounds.y);
         }
         // Bounding box fits map pane perfectly.
         else
         {
-            this.width = bounds.width * map_pane_rect.width / map_pane_rect.width;
-            this.height = bounds.height * map_pane_rect.height / map_pane_rect.height;
-            this.x = bounds.x;
-            this.y = bounds.y;
+            this.width.set(bounds.width * map_pane_rect.width / map_pane_rect.width);
+            this.height.set(bounds.height * map_pane_rect.height / map_pane_rect.height);
+            this.x.set(bounds.x);
+            this.y.set(bounds.y);
         }
+    }
+
+    pan1D(direction: PanDirection, amount?: number)
+    {
+        amount = amount ?? 10;
+        
+        switch (direction)
+        {
+            case "left": this.x.update(x => x - get(this.width) / amount); break;
+            case "right": this.x.update(x => x + get(this.width) / amount); break;
+            case "up": this.y.update(y => y - get(this.height) / amount); break;
+            case "down": this.y.update(y => y + get(this.height) / amount); break;
+        }
+    }
+
+    pan2D(offset: Pick<Point, "x" | "y">)
+    {
+        this.x.update(x => x - offset.x);
+        this.y.update(y => y - offset.y);
+    }
+
+    zoom(direction: ZoomDirection, scaling?: number)
+    {
+        scaling = scaling ?? 1.2;
+
+        const map_pane_rect = paneRect(name.pane.map);
+        if (!map_pane_rect) { return; }
+
+        const scale = direction === "out" ? scaling : 1 / scaling;
+
+        const width = get(this.width);
+        const height = get(this.height);
+
+        this.x.update(x => x + (width - width * scale) * (map_pane_rect.width / 2) / map_pane_rect.width);
+        this.y.update(y => y + (height - height * scale) * (map_pane_rect.height / 2) / map_pane_rect.height);
+        this.width.update(w => w * scale);
+        this.height.update(h => h * scale);
     }
 }
 

@@ -53,8 +53,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
         if (!pane_rect) { return { x: 0, y: 0, z: 0 }; }
 
-        const mapX = numberRangeMapping(click.x, 0, pane_rect.width, 0, $viewbox.width) + $viewbox.x;
-        const mapY = numberRangeMapping(click.y, 0, pane_rect.height, 0, $viewbox.height) + $viewbox.y;
+        const mapX = numberRangeMapping(click.x, 0, pane_rect.width, 0, $viewbox.getWidth()) + $viewbox.getX();
+        const mapY = numberRangeMapping(click.y, 0, pane_rect.height, 0, $viewbox.getHeight()) + $viewbox.getY();
 
         return { x: mapX, y: mapY, z: 0 };
     }
@@ -68,8 +68,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
             if (!pane_rect) { return; }
 
-            $viewbox.x -= event.movementX * ($viewbox.width / pane_rect.width);
-            $viewbox.y -= event.movementY * ($viewbox.height / pane_rect.height);
+            $viewbox.pan2D
+            ({
+                x: event.movementX * ($viewbox.getWidth() / pane_rect.width),
+                y: event.movementY * ($viewbox.getHeight() / pane_rect.height)
+            });
         }
     }
 
@@ -83,10 +86,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
         const map_offset = mapCoords({ x: event.offsetX, y: event.offsetY });
 
-        $viewbox.x += ($viewbox.width - $viewbox.width * zoom_scale) * (map_offset.x - $viewbox.x) / $viewbox.width;
-        $viewbox.y += ($viewbox.height - $viewbox.height * zoom_scale) * (map_offset.y - $viewbox.y) / $viewbox.height;
-        $viewbox.width *= zoom_scale;
-        $viewbox.height *= zoom_scale;
+        $viewbox.x.update(x => x + ($viewbox.getWidth() - $viewbox.getWidth() * zoom_scale) * (map_offset.x - $viewbox.getX()) / $viewbox.getWidth());
+        $viewbox.y.update(y => y + ($viewbox.getHeight() - $viewbox.getHeight() * zoom_scale) * (map_offset.y - $viewbox.getY()) / $viewbox.getHeight());
+        $viewbox.width.update(w => w * zoom_scale);
+        $viewbox.height.update(h => h * zoom_scale);
     }
 
 
@@ -304,6 +307,19 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             rerender(event);
         }
     }
+
+
+    $: viewbox_string = $viewbox.serialise();
+
+    function updateViewbox()
+    {
+        viewbox_string = $viewbox.serialise();
+    }
+
+    $viewbox.x.subscribe(updateViewbox);
+    $viewbox.y.subscribe(updateViewbox);
+    $viewbox.width.subscribe(updateViewbox);
+    $viewbox.height.subscribe(updateViewbox);
 </script>
 
 
@@ -318,7 +334,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     <svg
         id="map"
         role="none"
-        viewBox={$viewbox.serialise()}
+        viewBox={viewbox_string}
         on:click={handleLeftClick}
         on:mousemove={handleMouseMove}
         on:wheel={handleWheel}

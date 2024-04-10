@@ -22,39 +22,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
-    import { name } from "$lib/names";
     import { iof_print } from "$lib/render/iof";
     import PanDirectionSymbol from "$lib/render/symbol/PanDirectionSymbol.svelte";
     import { lang, mode, viewbox } from "$lib/state";
-    import { type PanDirection, type ZoomDirection, fitViewToCurrentLeg, fitViewToMap, paneRect } from "$lib/viewbox";
-
-
-    function pan(direction: PanDirection)
-    {
-        const granularity = 10;
-        
-        switch (direction)
-        {
-            case "left": $viewbox.x -= $viewbox.width / granularity; break;
-            case "right": $viewbox.x += $viewbox.width / granularity; break;
-            case "up": $viewbox.y -= $viewbox.height / granularity; break;
-            case "down": $viewbox.y += $viewbox.height / granularity; break;
-        }
-    }
-
-
-    function zoom(direction: ZoomDirection)
-    {
-        const map_pane_rect = paneRect(name.pane.map);
-        if (!map_pane_rect) { return; }
-
-        const scale = direction === "out" ? 1.2 : 1 / 1.2;
-
-        $viewbox.x += ($viewbox.width - $viewbox.width * scale) * (map_pane_rect.width / 2) / map_pane_rect.width;
-        $viewbox.y += ($viewbox.height - $viewbox.height * scale) * (map_pane_rect.height / 2) / map_pane_rect.height;
-        $viewbox.width *= scale;
-        $viewbox.height *= scale;
-    }
+    import { type PanDirection, type ZoomDirection, fitViewToCurrentLeg, fitViewToMap } from "$lib/viewbox";
 
 
     function reset()
@@ -97,7 +68,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     <div class="view-pan-controls">
         {#each pan_directions as direction}
             <label class="view-pan-{direction}">
-                <button class="view-pan-button" on:click={() => pan(direction)}></button>
+                <button class="view-pan-button" on:click={() => $viewbox.pan1D(direction)}></button>
                 <PanDirectionSymbol {direction} size={40}/>
             </label>
         {/each}
@@ -105,7 +76,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
     <div class="view-zoom-controls">
         {#each zoom_directions as direction}
-            <button class="view-zoom-button {direction.value}" on:click={() => zoom(direction.value)}>{direction.label}</button>
+            <button class="view-zoom-button {direction.value}" on:click={() => $viewbox.zoom(direction.value)}>{direction.label}</button>
         {/each}
     </div>
 

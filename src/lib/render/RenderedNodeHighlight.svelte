@@ -78,7 +78,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
                     ? map_pane_rect.height
                     : map_pane_rect.width;
 
-            const size_fraction = ((normal_node_radius) * $via_map.width / $viewbox.width) / smallest_map_pane_dimension;
+            const size_fraction = ((normal_node_radius) * $via_map.width / $viewbox.getWidth()) / smallest_map_pane_dimension;
             
             if (size_fraction > scale.size_fraction.max)
             {
