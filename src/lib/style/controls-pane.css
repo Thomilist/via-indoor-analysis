@@ -51,8 +51,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         margin: 0;
     }
 
-    /* Mobile or desktop, landscape */
-    @media (height < 800px) and (orientation: landscape), (height >= 800px) and (orientation: landscape)
+    /* Mobile, landscape; desktop, portrait or landscape */
+    @media (height < 800px) and (orientation: landscape), (height >= 800px) and (orientation: landscape), (width >= 800px) and (orientation: portrait)
     {
         border-left: 2px solid black;
     }
