@@ -21,9 +21,13 @@ The interface is available in both Danish and English, and a language switcher i
 
 The `View` mode is the primary mode for end users, including, but not limited to, curious participants of the competition.
 Users can select a course and cycle through its legs.
+
 For the selected leg, the relevant route choices are drawn on the map and listed in the control pane.
 In the list, the route choices are sorted by distance in ascending order, with their rank, colour, distance and elevation gain shown.
 Route choices can be highlighted on the map by selecting them in the list.
+
+There are also buttons for fitting and resetting the view.
+The former fits the position and zoom of the map to the selected leg, while the latter resets the position and zoom to a neutral state with an overview of the whole map.
 
 
 ### Edit
