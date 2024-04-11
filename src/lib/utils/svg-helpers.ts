@@ -62,16 +62,48 @@ export function svgPolylinePoints(points: Point[])
 }
 
 
-export function svgQuadraticBezier(points: { a: Point, b: Point }, offset: Vector)
+export function portalRouteSegmentArcHeightVector(points: { a: Point, b: Point }, arc_size_ratio?: number)
 {
-    const midpoint: Point =
+    arc_size_ratio = arc_size_ratio ?? 6;
+    
+    const portal_segment_vector = new Vector(points);
+    const portal_segment_direction = portal_segment_vector.directionXY();
+
+    const portal_arc_height_direction = (() =>
     {
+        // Quadrant 1 or 4.
+        if (Math.abs(portal_segment_direction) < (Math.PI / 2))
+        {
+            return portal_segment_direction - Math.PI / 2;
+        }
+        // Quadrant 2 or 3.
+        {
+            return portal_segment_direction + Math.PI / 2;
+        }
+    })();
+
+    return new Vector({ b: polarToCartesian(portal_segment_vector.length(["x", "y"]) / arc_size_ratio, portal_arc_height_direction) });
+}
+
+
+export function midpoint(points: { a: Point, b: Point }): Point
+{
+    return {
         x: (points.a.x + points.b.x) / 2,
         y: (points.a.y + points.b.y) / 2,
-        z: 0
+        z: (points.a.z + points.b.z) / 2
     };
+}
 
-    const control_point = new Vector({ b: midpoint }).addOriginVector(offset);
 
-    return `M${points.a.x} ${points.a.y} Q${control_point.b.x} ${control_point.b.y} ${points.b.x} ${points.b.y}`;
+export function quadraticBezierControlPoint(points: { a: Point, b: Point })
+{
+    return new Vector({ b: midpoint(points) }).addOriginVector(portalRouteSegmentArcHeightVector(points)).b;
+}
+
+
+export function svgQuadraticBezier(points: { a: Point, b: Point }, offset: Vector)
+{
+    const control_point = quadraticBezierControlPoint(points);
+    return `M${points.a.x} ${points.a.y} Q${control_point.x} ${control_point.y} ${points.b.x} ${points.b.y}`;
 }

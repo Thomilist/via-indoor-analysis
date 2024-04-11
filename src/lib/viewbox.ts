@@ -31,6 +31,7 @@ import { browser } from "$app/environment";
 import { Route } from "./map-graph/route";
 import { tweened, type Tweened, type TweenedOptions } from "svelte/motion";
 import { quadInOut } from "svelte/easing";
+import { quadraticBezierControlPoint } from "./utils/svg-helpers";
 
 
 export class ViewBox
@@ -205,18 +206,25 @@ export function fitViewToCurrentLeg(control_padding: number)
     
     const points: Point[] = nodes.map(node =>
     {
+        const points_to_add: Point[] = [node];
+        
         if (node instanceof ControlMapNode)
         {
-            return [
-                node,
+            points_to_add.push
+            (
                 { x: node.x + control_padding, y: node.y, z: 0 },
                 { x: node.x - control_padding, y: node.y, z: 0 },
                 { x: node.x, y: node.y + control_padding, z: 0 },
                 { x: node.x, y: node.y - control_padding, z: 0 }
-            ];
+            );
         }
 
-        return node;
+        node.portal_neighbours.forEach(neighbour =>
+        {
+            points_to_add.push(quadraticBezierControlPoint({ a: node, b: neighbour }));
+        });
+
+        return points_to_add;
     })
     .flat(1);
 

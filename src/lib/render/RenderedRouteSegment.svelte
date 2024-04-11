@@ -25,7 +25,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { Distance } from "$lib/utils/distance";
     import { MapNode } from "$lib/map-graph/node";
     import { via_map } from "$lib/state";
-    import { polarToCartesian, svgPolylinePoints, svgQuadraticBezier } from "$lib/utils/svg-helpers";
+    import { polarToCartesian, portalRouteSegmentArcHeightVector, svgPolylinePoints, svgQuadraticBezier } from "$lib/utils/svg-helpers";
     import { Vector, type Point } from "$lib/utils/vector";
     import type { RouteSegmentRenderData } from "./render-data";
     import { directionChange, isPortalRouteSegment, radiusFromArc } from "$lib/utils/misc";
@@ -119,28 +119,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         });
     }
 
-    const portal_arc_height_vector = (() =>
-    {
-        if (!portal) { return new Vector(); }
-
-        const portal_segment_vector = new Vector({ a: data.nodes[0], b: data.nodes[1] });
-        const portal_segment_direction = portal_segment_vector.directionXY();
-
-        const portal_arc_height_direction = (() =>
-        {
-            // Quadrant 1 or 4.
-            if (Math.abs(portal_segment_direction) < (Math.PI / 2))
-            {
-                return portal_segment_direction - Math.PI / 2;
-            }
-            // Quadrant 2 or 3.
-            {
-                return portal_segment_direction + Math.PI / 2;
-            }
-        })();
-
-        return new Vector({ b: polarToCartesian(portal_segment_vector.length(["x", "y"]) / portal_arc_size_ratio, portal_arc_height_direction) });
-    })();
+    const portal_arc_height_vector = portal ? portalRouteSegmentArcHeightVector({ a: data.nodes[0], b: data.nodes[1] }) : new Vector();
 </script>
 
 
