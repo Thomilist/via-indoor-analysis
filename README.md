@@ -192,11 +192,11 @@ To find more variants, this stage is repeated, but referencing the most recently
 Along the way, the new variants are compared to all the stored routes to ensure *different* variants are found.
 
 Conventionally, Yen's algorithm terminates once a certain number of alternate routes have been found (or when no more alternatives *can* be found).
-However, no fixed number of alternate routes can be chosen here, so instead, termination depends on the *distance* of the newly-found alternative route.
+However, no fixed number of alternate routes can be chosen here, so instead, termination depends on the *distance* of the newly-found alternate route.
 In this case, the algorithm is halted when the shortest new variant is more than twice the distance of the shortest route.
 
 Another modification is that, rather than only storing the shortest variant and purging *all* others between iterations, only *some* of the leftover variants are purged, with the shortest 40% kept in the temporary pool for comparison against the next variants.
-The shortest of these leftover variants is then stored in the *next* iteration if all the new variants are longer.
+The shortest of these leftover variants is then stored in the *next* iteration if all the *new* variants are longer.
 The effect is that a few additional (interesting) alternate routes, which otherwise would be discarded, are stored, though this comes at a severe performance penalty:
 the vast majority of computation time is spent here, because the pool of variants takes much longer to deplete in this implementation than with the standard version of Yen's algorithm.
 
@@ -245,7 +245,7 @@ The gist of this filter is that excessively long routes are discarded, but with 
 
 Comparison of a `route` to the `shortest_route` on the same leg uses their elevation gains and distances, as well as a baseline `threshold`, which much be at least 1 - it is fixed to 1.7 in the implementation.
 
-Based on these parameters, an `weighted_threshold` is calculated to account for differences in elevation gain:
+Based on these parameters, a `weighted_threshold` is calculated to account for differences in elevation gain:
 
 ```math
 {weighted\_threshold}={{1}+{{\left({{threshold}-{1}}\right)}^{{\left({d}\right)}^{2}}}}
