@@ -22,7 +22,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 import { get } from "svelte/store";
-import { course_index, courses, current_routes, map_graph, mode } from "../state";
+import { course_index, courses, current_routes, map_graph, mode, routeFilters } from "../state";
 import { ControlMapNode, WaypointMapNode } from "../map-graph/node";
 import { Route } from "../map-graph/route";
 import { groupIncludesOther, powSelf } from "$lib/utils/misc";
@@ -361,12 +361,37 @@ export function fetchRoutes()
 
     if (!least_elevation) { return []; }
 
-    excludeDuplicates(routes);
-    excludeOutliersByDistance(routes, 1.2);
-    excludeBasicDetours(routes);
-    filterByDistance(routes, 1.7);
-    filterBySameness(routes, 0.5);
-    excludeCrossoverDetours(routes);
+    const options = get(routeFilters);
+
+    if (options.exclude_duplicates.enabled)
+    {
+        excludeDuplicates(routes);
+    }
+
+    if (options.exclude_outliers_by_distance.enabled)
+    {
+        excludeOutliersByDistance(routes, options.exclude_outliers_by_distance.threshold);
+    }
+
+    if (options.exclude_basic_detours.enabled)
+    {
+        excludeBasicDetours(routes);
+    }
+
+    if (options.filter_by_distance.enabled)
+    {
+        filterByDistance(routes, options.filter_by_distance.threshold);
+    }
+
+    if (options.filter_by_sameness.enabled)
+    {
+        filterBySameness(routes, options.filter_by_sameness.max_sameness);
+    }
+
+    if (options.exclude_crossover_detours.enabled)
+    {
+        excludeCrossoverDetours(routes);
+    }
 
     restoreRoute(routes, least_elevation);
 

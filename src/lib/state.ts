@@ -51,6 +51,15 @@ export const current_leg = writable<ControlMapNode[]>([]);
 export const current_routes = writable<Route[]>([]);
 export const elevation_plot = writable<boolean>(true);
 export const blockades = writable<Blockade[]>([]);
+export const routeFilters = writable(
+{
+    exclude_duplicates: { enabled: true },
+    exclude_outliers_by_distance: { enabled: true, threshold: 1.2 },
+    exclude_basic_detours: { enabled: true },
+    filter_by_distance: { enabled: true, threshold: 1.7 },
+    filter_by_sameness: { enabled: true, max_sameness: 0.5 },
+    exclude_crossover_detours: { enabled: true }
+});
 
 export type Language = "DA" | "EN";
 export type Mode = "View" | "Edit";

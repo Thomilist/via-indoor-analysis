@@ -1,4 +1,4 @@
-<!--
+/*
 
 via-indoor-analysis: Route choice analysis tool for indoor sprint 
 orienteering at VIA University College Horsens.
@@ -17,29 +17,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
--->
+*/
 
 
 
-<script lang="ts">
-    import { rerender } from "$lib/render/rerender";
-    import { calculateState, lang } from "$lib/state";
-    import CalculationViewSelector from "./CalculationViewSelector.svelte";
-    import RouteFilteringWidget from "./RouteFilteringWidget.svelte";
+fieldset
+{
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
 
-
-    function calculate()
+    & .filter-value
     {
-        calculateState();
-        rerender();
+        margin-left: 3em;
     }
-</script>
-
-
-
-<button on:click={calculate}>{({DA: "Beregn", EN: "Calculate"}[$lang])}</button>
-
-<hr>
-<CalculationViewSelector/>
-<hr>
-<RouteFilteringWidget/>
+}
