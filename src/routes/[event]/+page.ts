@@ -22,13 +22,15 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 import { MapMeta } from "$lib/map";
-import { loadStateFromObject, via_map } from "$lib/state";
+import { course_index, courses, loadStateFromObject, via_map } from "$lib/state";
+import { get } from "svelte/store";
 import type { PageLoad } from "./$types";
+import { Distance } from "$lib/utils/distance";
+import { rerender } from "$lib/render/rerender";
 
 export const load: PageLoad = async ({ params, fetch }) =>
 {
     const meta = await (await fetch(`/${params.event}/meta.json`)).json();
-    console.log(meta);
 
     const map_meta = new MapMeta({
         source: `/${params.event}/${meta.map.source}`,
@@ -43,4 +45,19 @@ export const load: PageLoad = async ({ params, fetch }) =>
 
     const state = await (await fetch(`/${params.event}/${meta.state.source}`)).json();
     loadStateFromObject(state, true);
+
+    let longest_course_distance: Distance = new Distance();
+    let longest_course_index: number = 0;
+
+    get(courses).forEach((course, index) =>
+    {
+        if (course.distance.greaterThan(longest_course_distance))
+        {
+            longest_course_distance = course.distance;
+            longest_course_index = index;
+        }
+    });
+
+    course_index.set(longest_course_index);
+    rerender();
 }
