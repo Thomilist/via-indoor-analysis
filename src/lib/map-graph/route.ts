@@ -34,11 +34,11 @@ const route_colours =
     "blue",
     "red",
     "green",
-    "deeppink",
-    "skyblue",
-    "mediumpurple",
-    "yellowgreen",
     "cyan",
+    "mediumpurple",
+    "deeppink",
+    "yellowgreen",
+    "skyblue",
     "olive"
 ];
 
