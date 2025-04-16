@@ -21,9 +21,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-import { MapNode, WaypointMapNode } from "$lib/map-graph/node";
+import { Blockade } from "$lib/map-graph/blockade";
+import { BlockadeMapNode, MapNode, WaypointMapNode } from "$lib/map-graph/node";
 import { PathStep } from "$lib/map-graph/path";
-import { map_graph } from "$lib/state";
+import { blockades, map_graph } from "$lib/state";
 import { Distance } from "$lib/utils/distance";
 import { SortedSet } from "$lib/utils/sorted-set";
 import { get } from "svelte/store";
@@ -33,6 +34,8 @@ export function findPaths()
 {
     console.log("Finding paths...");
     const start_time = Date.now();
+
+    updateBlockades();
     
     get(map_graph).nodes
         .filter(node => WaypointMapNode.isWaypointMapNode(node))
@@ -47,6 +50,36 @@ export function findPaths()
     
     const time = Date.now() - start_time;
     console.log(`Path finding complete (${time.valueOf()} ms)`);
+}
+
+
+function updateBlockades()
+{
+    blockades.set([]);
+
+    const blockade_nodes = new Set<BlockadeMapNode>(get(map_graph).nodes
+        .filter(node => BlockadeMapNode.isBlockadeMapNode(node)));
+
+    while (blockade_nodes.size > 0)
+    {
+        const blockade_node = blockade_nodes.values().next().value;
+
+        if (!blockade_node)
+        {
+            break;
+        }
+
+        blockade_node.all_neighbours.forEach(node =>
+        {
+            if (blockade_nodes.has(node))
+            {
+                get(blockades).push(new Blockade(blockade_node, node));
+                console.log("Added blockade");
+            }
+        });
+
+        blockade_nodes.delete(blockade_node);
+    }
 }
 
 
@@ -75,7 +108,7 @@ function findShortestPaths(from: WaypointMapNode)
 
             if (path)
             {
-                console.log(`Found shortest path to waypoint ${current.node.id} (${Math.round(path.distance.value())} m)`);
+                //console.log(`Found shortest path to waypoint ${current.node.id} (${Math.round(path.distance.value())} m)`);
                 from.addWaypointNeighbour(current.node, path);
             }
         }
@@ -85,6 +118,21 @@ function findShortestPaths(from: WaypointMapNode)
             {
                 if (current && unvisited_nodes.has(node))
                 {
+                    let blocked = false;
+
+                    if (!current.node.portal_neighbours.has(node))
+                    {
+                        for (const blockade of get(blockades))
+                        {
+                            if (blockade.obstructsConnection({a: current.node, b: node}))
+                            {
+                                console.log("BLOCKED");
+                                blocked = true;
+                                return;
+                            }
+                        }
+                    }
+
                     const current_distance = current.distance.value();
                     const other_distance = node.distance_note.value();
                     const distance_between = current.node.distanceToPosition(node);

@@ -22,7 +22,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
-    import { ControlMapNode, MapNode, WaypointMapNode } from "$lib/map-graph/node";
+    import { BlockadeMapNode, ControlMapNode, MapNode, WaypointMapNode } from "$lib/map-graph/node";
     import { pairAlreadyIncluded, pairsEqual, type Pair } from "$lib/utils/pairs";
     import { fetchRoutes } from "$lib/pathfinding/pick-routes";
     import { routeSegments } from "$lib/pathfinding/split-routes";
@@ -37,6 +37,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import RenderedRouteSegment from "./RenderedRouteSegment.svelte";
     import type { ConnectionRenderData, ControlNodeCenterRenderData, ControlNumberRenderData, CourseLegRenderData, NodeHighlightRenderData, NodeRenderData, RouteJunctionRenderData } from "./render-data";
     import { averageHeight, isPortalRouteSegment } from "$lib/utils/misc";
+    import RenderedBlockade from "./RenderedBlockade.svelte";
 
 
     // Nodes to render + their metadata.
@@ -207,6 +208,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         .filter(node =>
         {
             return node.all_neighbours.size > 0;
+        })
+        .filter(node =>
+        {
+            return !(node instanceof BlockadeMapNode);
         })
         // Arrange nodes in pairs for each connection.
         .map(node =>
@@ -434,6 +439,58 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             }
         })
         .map(control => { return ((): ControlNumberRenderData => { return { control: control }; })() });
+
+    
+    // Blockades to render.
+    $: blockade_render_data = $map_graph.nodes
+        // General visibility filtering.
+        .filter(node =>
+        {
+            switch ($mode)
+            {
+                case "View": return true;
+                case "Edit":
+                {
+                    switch ($edit_mode)
+                    {
+                        case "Nodes": return false;
+                        case "Connections": return true;
+                        case "Courses": return true;
+                        case "Calculations":
+                        {
+                            switch ($calculation_view)
+                            {
+                                case "Paths": return true;
+                                case "Legs": return true;
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        // Include only nodes with neighbours.
+        .filter(node =>
+        {
+            return node.all_neighbours.size > 0;
+        })
+        .filter(node =>
+        {
+            return node instanceof BlockadeMapNode;
+        })
+        // Arrange nodes in pairs for each connection.
+        .map(node =>
+        {
+            return [...node.all_neighbours].map((neighbour): Pair<MapNode> =>
+            {
+                return { a: node, b: neighbour };
+            });
+        })
+        .flat(1)
+        // Eliminate mirrors.
+        .filter((connection, index, connections) =>
+        {
+            return !pairAlreadyIncluded(connection, index, connections, "mirrored");
+        });
 </script>
 
 
@@ -441,6 +498,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 <g pointer-events="none">
     {#each connection_render_data as data (`RenderedConnection ${data.a.id} ${data.b.id}`)}
         <RenderedConnection {data}/>
+    {/each}
+
+    {#each blockade_render_data as data (`RenderedBlockade ${data.a.id} ${data.b.id}`)}
+        <RenderedBlockade {data}/>
     {/each}
 
     {#each control_node_center_render_data as data (`RenderedControlNodeCenter ${data.control.id}`)}

@@ -33,6 +33,7 @@ import { findRoutes } from "./pathfinding/build-routes";
 import { findShortestRoute } from "./pathfinding/pick-routes";
 import { Route } from "./map-graph/route";
 import { rerender } from "./render/rerender";
+import type { Blockade } from "./map-graph/blockade";
 
 
 export const lang = writable<Language>("DA");
@@ -49,7 +50,7 @@ export const calculation_view = writable<CalculationView>("Paths");
 export const current_leg = writable<ControlMapNode[]>([]);
 export const current_routes = writable<Route[]>([]);
 export const elevation_plot = writable<boolean>(true);
-
+export const blockades = writable<Blockade[]>([]);
 
 export type Language = "DA" | "EN";
 export type Mode = "View" | "Edit";

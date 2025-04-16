@@ -21,7 +21,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-import type { ControlMapNode, MapNode, NodeRelation } from "$lib/map-graph/node";
+import type { BlockadeMapNode, ControlMapNode, MapNode, NodeRelation } from "$lib/map-graph/node";
 import type { Route } from "$lib/map-graph/route";
 
 
@@ -83,3 +83,10 @@ export type RouteJunctionRenderData =
     highlighted: boolean,
     dimmed: boolean
 };
+
+
+export type BlockadeRenderData =
+{
+    a: BlockadeMapNode,
+    b: BlockadeMapNode
+}

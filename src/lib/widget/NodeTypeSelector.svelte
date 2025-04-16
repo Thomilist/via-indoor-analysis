@@ -32,7 +32,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         { value: "Waypoint", DA: "Pejlemærke", EN: "Waypoint"},
         { value: "Control", DA: "Post", EN: "Control"},
         { value: "Start", DA: "Start", EN: "Start"},
-        { value: "Finish", DA: "Mål", EN: "Finish"}
+        { value: "Finish", DA: "Mål", EN: "Finish"},
+        { value: "Blockade", DA: "Afspærring", EN: "Blockade"},
     ];
 </script>
 

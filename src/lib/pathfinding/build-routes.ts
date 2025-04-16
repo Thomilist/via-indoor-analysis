@@ -167,7 +167,7 @@ function findRoutesForLeg(from: ControlMapNode, to: ControlMapNode, distance_thr
 
         if (best_candidate)
         {
-            console.log(`Found next shortest route (${Math.round(best_candidate.distance.value())} m)`);
+            //console.log(`Found next shortest route (${Math.round(best_candidate.distance.value())} m)`);
             shortest_routes.push(best_candidate);
         }
         else

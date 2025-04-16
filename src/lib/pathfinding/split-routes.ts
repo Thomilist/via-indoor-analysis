@@ -88,7 +88,7 @@ function nodesUntilJunction(node_traffic_map: Map<MapNode, NodeTraffic>, last: M
     {
         if (node_traffic.isLinear() && !node_traffic.jumps())
         {
-            const next = [...node_traffic.departures.keys()][0];
+            const next = node_traffic.departures.keys().next().value;
             
             if (next)
             {

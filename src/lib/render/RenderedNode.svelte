@@ -24,7 +24,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 <script lang="ts">
     import { via_map } from "$lib/state";
     import { Distance } from "$lib/utils/distance";
-    import { ControlMapNode, FinishControlMapNode, StartControlMapNode, WaypointMapNode, MapNode } from "$lib/map-graph/node";
+    import { ControlMapNode, FinishControlMapNode, StartControlMapNode, WaypointMapNode, MapNode, BlockadeMapNode } from "$lib/map-graph/node";
     import { iof_print } from "./iof";
     import type { NodeRenderData } from "./render-data";
     import { svgTrianglePoints } from "$lib/utils/svg-helpers";
@@ -79,6 +79,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 {:else if data.node instanceof WaypointMapNode}
     {#each [{colour: "red", scale: 1}, {colour: "white", scale: 0.8}, {colour: "red", scale: 0.6}] as params}
         <circle {...node_position} r={landmark_node_radius * params.scale} fill={params.colour} fill-opacity={data.node.hovered ? params.scale * 0.4 : 1} />
+    {/each}
+
+{:else if data.node instanceof BlockadeMapNode}
+    {#each [{colour: "magenta", scale: 1}, {colour: "white", scale: 0.8}, {colour: "magenta", scale: 0.6}] as params}
+        <circle {...node_position} r={normal_node_radius * params.scale} fill={params.colour} fill-opacity={data.node.hovered ? params.scale * 0.4 : 1} />
     {/each}
 
 {:else if data.node instanceof MapNode}

@@ -22,7 +22,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 import type { Point } from "$lib/utils/vector";
-import { FinishControlMapNode, ControlMapNode, WaypointMapNode, MapNode, type MapNodeName, StartControlMapNode, type AnyMapNode } from "./node";
+import { FinishControlMapNode, ControlMapNode, WaypointMapNode, MapNode, type MapNodeName, StartControlMapNode, type AnyMapNode, BlockadeMapNode } from "./node";
 
 
 export class MapGraph
@@ -71,6 +71,11 @@ export class MapGraph
 
         switch (type)
         {
+            case "Blockade":
+            {
+                new_node = new BlockadeMapNode(node_id, position);
+                break;
+            }
             case "Finish":
             {
                 new_node = new FinishControlMapNode(node_id, position);

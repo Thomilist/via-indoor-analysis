@@ -90,6 +90,8 @@ export class MapNode
             "Control" :
         this instanceof WaypointMapNode ?
             "Waypoint" :
+        this instanceof BlockadeMapNode ?
+            "Blockade" :
             "Normal";
     }
 
@@ -105,7 +107,18 @@ export class MapNode
 
     connect(other: MapNode, relation: NodeRelation)
     {
-        if (this.all_neighbours.has(other)) { return; }
+        if (this.all_neighbours.has(other))
+        {
+            return;
+        }
+
+        const blockadeNodes = (BlockadeMapNode.isBlockadeMapNode(this) ? 1 : 0)
+            + (BlockadeMapNode.isBlockadeMapNode(other) ? 1 : 0);
+
+        if (blockadeNodes == 1)
+        {
+            return;
+        }
 
         this.disconnect(other);
 
@@ -122,6 +135,11 @@ export class MapNode
             }
             case "Portal":
             {
+                if (blockadeNodes > 0)
+                {
+                    break;
+                }
+
                 this.portal_neighbours.add(other);
                 other.portal_neighbours.add(this);
                 break;
@@ -305,12 +323,21 @@ export class FinishControlMapNode extends ControlMapNode
     }
 }
 
+export class BlockadeMapNode extends MapNode
+{
+    static isBlockadeMapNode(value: any): value is BlockadeMapNode
+    {
+        return value instanceof BlockadeMapNode;
+    }
+}
+
 
 export type MapNodeConstructor = typeof MapNode;
 export type WaypointMapNodeConstructor = typeof WaypointMapNode;
 export type ControlMapNodeConstructor = typeof ControlMapNode;
 export type StartControlMapNodeConstructor = typeof StartControlMapNode;
 export type FinishControlMapNodeConstructor = typeof FinishControlMapNode;
+export type BlockadeMapNodeConstructor = typeof BlockadeMapNode;
 
 
 export type AnyMapNodeConstructor
@@ -318,7 +345,8 @@ export type AnyMapNodeConstructor
 | WaypointMapNodeConstructor
 | ControlMapNodeConstructor
 | StartControlMapNodeConstructor
-| FinishControlMapNodeConstructor;
+| FinishControlMapNodeConstructor
+| BlockadeMapNodeConstructor;
 
 
 export type AnyMapNode
@@ -326,10 +354,11 @@ export type AnyMapNode
 | InstanceType<WaypointMapNodeConstructor>
 | InstanceType<ControlMapNodeConstructor>
 | InstanceType<StartControlMapNodeConstructor>
-| InstanceType<FinishControlMapNodeConstructor>;
+| InstanceType<FinishControlMapNodeConstructor>
+| InstanceType<BlockadeMapNodeConstructor>;
 
 
-const MapNodeNames = ["Normal", "Waypoint", "Control", "Start", "Finish"] as const;
+const MapNodeNames = ["Normal", "Waypoint", "Control", "Start", "Finish", "Blockade"] as const;
 export type MapNodeName = typeof MapNodeNames[number];
 export type NodeRelation = "Normal" | "Portal";
 
