@@ -1,4 +1,4 @@
-<!--
+/*
 
 via-indoor-analysis: Route choice analysis tool for indoor sprint 
 orienteering at VIA University College Horsens.
@@ -17,29 +17,30 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
--->
+*/
 
 
 
-<script>
-    import { name } from "$lib/names";
-    import Controls from "$lib/pane/Controls.svelte";
-    // import Elevation from "$lib/pane/Elevation.svelte";
-    import Header from "$lib/pane/Header.svelte";
-    import Map from "$lib/pane/Map.svelte";
-</script>
+import { MapMeta } from "$lib/map";
+import { loadStateFromObject, via_map } from "$lib/state";
+import type { PageLoad } from "./$types";
 
+export const load: PageLoad = async ({ params, fetch }) =>
+{
+    const meta = await (await fetch(`/${params.event}/meta.json`)).json();
+    console.log(meta);
 
+    const map_meta = new MapMeta({
+        source: `/${params.event}/${meta.map.source}`,
+        width: meta.map.width,
+        height: meta.map.height,
+        resolution: meta.map.resolution,
+        scale: meta.map.scale,
+        print_scale: meta.map.print_scale
+    });
 
-<style>
-    @import "$lib/style/pane-container";
-</style>
+    via_map.set(map_meta);
 
-
-
-<div class="pane-container" id={name.pane.container}>
-    <Header/>
-    <Map/>
-    <Controls/>
-    <!-- <Elevation/> -->
-</div>
+    const state = await (await fetch(`/${params.event}/${meta.state.source}`)).json();
+    loadStateFromObject(state, true);
+}

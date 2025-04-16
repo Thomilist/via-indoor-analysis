@@ -216,7 +216,7 @@ export class PathStep
 
     buildPath()
     {
-        if (!parent || !(this.node instanceof WaypointMapNode))
+        if (!this.parent || !(this.node instanceof WaypointMapNode))
         {
             return;
         }

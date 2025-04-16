@@ -21,7 +21,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-import { get, readable, writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import { MapMeta } from "./map";
 import { MapGraph } from "./map-graph/graph";
 import { ViewBox } from "./viewbox";
@@ -38,7 +38,7 @@ import type { Blockade } from "./map-graph/blockade";
 
 export const lang = writable<Language>("DA");
 export const mode = writable<Mode>("View");
-export const via_map = readable(new MapMeta({ source: "/via-map.jpg", width: 3470, height: 4844, resolution: 300, scale: 750, print_scale: 7500 }));
+export const via_map = writable(new MapMeta({ source: "/via-map.jpg", width: 3470, height: 4844, resolution: 300, scale: 750, print_scale: 7500 }));
 export const viewbox = writable(new ViewBox(get(via_map)));
 export const edit_mode = writable<EditMode>("Nodes");
 export const map_graph = writable(new MapGraph());

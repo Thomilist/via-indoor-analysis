@@ -296,7 +296,7 @@ export class RouteStep
 
     buildRoute()
     {
-        if (!parent || !(this.waypoint instanceof ControlMapNode))
+        if (!this.parent || !(this.waypoint instanceof ControlMapNode))
         {
             return;
         }

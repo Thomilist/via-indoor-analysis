@@ -22,15 +22,24 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
-    
+    import { name } from "$lib/names";
+    import Controls from "$lib/pane/Controls.svelte";
+    // import Elevation from "$lib/pane/Elevation.svelte";
+    import Header from "$lib/pane/Header.svelte";
+    import Map from "$lib/pane/Map.svelte";
 </script>
 
 
 
 <style>
-    @import "$lib/style/base.css";
+    @import "$lib/style/pane-container";
 </style>
 
 
 
-<slot/>
+<div class="pane-container" id={name.pane.container}>
+    <Header/>
+    <Map/>
+    <Controls/>
+    <!-- <Elevation/> -->
+</div>
