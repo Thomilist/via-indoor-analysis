@@ -22,6 +22,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
+    import { findLegSuggestions } from "$lib/pathfinding/suggest-legs";
     import { rerender } from "$lib/render/rerender";
     import { calculateState, lang } from "$lib/state";
     import CalculationViewSelector from "./CalculationViewSelector.svelte";
@@ -33,11 +34,19 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         calculateState();
         rerender();
     }
+
+    function suggestLegs()
+    {
+        findLegSuggestions();
+        rerender();
+    }
 </script>
 
 
 
 <button on:click={calculate}>{({DA: "Beregn", EN: "Calculate"}[$lang])}</button>
+
+<button on:click={suggestLegs}>{({DA: "Foreslå stræk", EN: "Suggest legs"}[$lang])}</button>
 
 <hr>
 <CalculationViewSelector/>
