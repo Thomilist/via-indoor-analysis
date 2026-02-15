@@ -171,7 +171,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
         if (nearby)
         {
-            nearby.node.hovered = true;
+            $map_graph.setNodeHovered(nearby.node);
             newly_hovered_node = nearby.node.id;
         }
 
@@ -188,7 +188,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
         if (nearby)
         {
-            nearby.node.selected = !nearby.was_selected;
+            $map_graph.setNodeSelected(nearby.node, !nearby.was_selected);
         }
     }
 

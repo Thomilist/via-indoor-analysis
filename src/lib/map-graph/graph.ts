@@ -29,24 +29,36 @@ export class MapGraph
 {
     nodes: MapNode[] = [];
 
+    static #partitionSize: number = 32;
+    #nodePartitions: Map<number, Map<number, Set<MapNode>>> = new Map();
+    #selectedNodes: Set<MapNode> = new Set();
+    #hoveredNodes: Set<MapNode> = new Set();
+
     nearbyNode(point: Point, clear?: { hovered?: boolean, selected?: boolean })
     {
         const nodes_under_mouse: { node: MapNode, distance: number, was_hovered: boolean, was_selected: boolean }[] = [];
 
-        this.nodes.forEach(entry =>
+        this.#relevantNodePartitions(point).forEach(partition => partition.forEach(node => 
         {
-            if (!entry.visible) { return; }
+            if (!node.visible) { return; }
             
-            const mouse_node_distance = entry.distanceToPosition(point);
+            const mouse_node_distance = node.distanceToPosition(point);
 
-            if (mouse_node_distance < entry.interact_range)
+            if (mouse_node_distance < node.interact_range)
             {
-                nodes_under_mouse.push({ node: entry, distance: mouse_node_distance, was_hovered: entry.hovered, was_selected: entry.selected });
+                nodes_under_mouse.push({ node: node, distance: mouse_node_distance, was_hovered: node.hovered, was_selected: node.selected });
             }
-            
-            if (clear?.hovered) { entry.hovered = false; }
-            if (clear?.selected) { entry.selected = false; }
-        });
+        }));
+
+        if (clear?.hovered)
+        {
+            this.clearHoveredNodes();
+        }
+
+        if (clear?.selected)
+        {
+            this.clearSelectedNodes();
+        }
 
         if (nodes_under_mouse.length > 0)
         {
@@ -104,6 +116,12 @@ export class MapGraph
         }
 
         this.nodes.push(new_node);
+
+        for (const partition of this.#relevantNodePartitions(new_node))
+        {
+            partition.add(new_node);
+        }
+
         return new_node;
     }
 
@@ -115,5 +133,104 @@ export class MapGraph
         {
             this.nodes.splice(index, 1);
         }
+
+        for (const partition of this.#relevantNodePartitions(node))
+        {
+            partition.delete(node);
+        }
+    }
+
+    clearHoveredNodes()
+    {
+        for (const node of this.#hoveredNodes)
+        {
+            node.hovered = false;
+        }
+
+        this.#hoveredNodes.clear();
+    }
+
+    clearSelectedNodes()
+    {
+        for (const node of this.#selectedNodes)
+        {
+            node.selected = false;
+        }
+
+        this.#selectedNodes.clear();
+    }
+
+    setNodeHovered(node: MapNode, hovered?: boolean)
+    {
+        hovered ??= true;
+
+        node.hovered = hovered;
+
+        if (hovered)
+        {
+            this.#hoveredNodes.add(node);
+        }
+        else
+        {
+            this.#hoveredNodes.delete(node);
+        }
+    }
+
+    setNodeSelected(node: MapNode, selected?: boolean)
+    {
+        selected ??= true;
+
+        node.selected = selected;
+
+        if (selected)
+        {
+            this.#selectedNodes.add(node);
+        }
+        else
+        {
+            this.#selectedNodes.delete(node);
+        }
+    }
+
+    toggleNodeSelected(node: MapNode)
+    {
+        this.setNodeSelected(node, !node.selected);
+    }
+
+    #relevantNodePartitions(position: { x: number, y: number }): Set<MapNode>[]
+    {
+        const x_indices = this.#partitionIndices(position.x);
+        const y_indices = this.#partitionIndices(position.y);
+
+        return [
+            this.#nodePartition({ x: x_indices.under, y: y_indices.under }),
+            this.#nodePartition({ x: x_indices.under, y: y_indices.adjacent }),
+            this.#nodePartition({ x: x_indices.adjacent, y: y_indices.under }),
+            this.#nodePartition({ x: x_indices.adjacent, y: y_indices.adjacent })
+        ];
+    }
+
+    #nodePartition(partition: { x: number, y: number }): Set<MapNode>
+    {
+        if (!this.#nodePartitions.has(partition.x))
+        {
+            this.#nodePartitions.set(partition.x, new Map());
+        }
+
+        if (!this.#nodePartitions.get(partition.x)!.has(partition.y))
+        {
+            this.#nodePartitions.get(partition.x)!.set(partition.y, new Set());
+        }
+
+        return this.#nodePartitions.get(partition.x)!.get(partition.y)!;
+    }
+
+    #partitionIndices(position: number): { under: number, adjacent: number }
+    {
+        const unrounded_index = position / MapGraph.#partitionSize;
+        const rounded_index = Math.round(unrounded_index);
+        const adjacent_index = rounded_index < unrounded_index ? rounded_index - 1 : rounded_index + 1;
+
+        return { under: rounded_index, adjacent: adjacent_index };
     }
 }

@@ -40,11 +40,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
     async function updateLegSelection()
     {
-        $map_graph.nodes.forEach(node => node.selected = false);
+        $map_graph.clearSelectedNodes();
 
         const leg_index = $courses[$course_index].selected_leg;
         $current_leg = $courses[$course_index].segment(leg_index, leg_index + 1);
-        $current_leg.forEach(node => node.selected = true);
+        $current_leg.forEach(node => $map_graph.setNodeSelected(node));
 
         leg_label.a = ($current_leg.at(0) instanceof StartControlMapNode)
             ? {DA: "Start", EN: "Start"}[$lang]
