@@ -43,7 +43,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         console.log(`DEBUG PRINT
         click: ${event.x} ${event.y}
         rect: ${pane_rect?.width} ${pane_rect?.height}
-        vbox: ${$viewbox.serialise()}`);
+        vbox: ${$viewbox.serialised}`);
     }
 
 
@@ -157,10 +157,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
         const map_offset = mapCoords(center);
 
-        $viewbox.x.update(x => x + ($viewbox.getWidth() - $viewbox.getWidth() * scale) * (map_offset.x - $viewbox.getX()) / $viewbox.getWidth(), ViewBox.tween_fast);
-        $viewbox.y.update(y => y + ($viewbox.getHeight() - $viewbox.getHeight() * scale) * (map_offset.y - $viewbox.getY()) / $viewbox.getHeight(), ViewBox.tween_fast);
-        $viewbox.width.update(w => w * scale, ViewBox.tween_fast);
-        $viewbox.height.update(h => h * scale, ViewBox.tween_fast);
+        $viewbox.x.set($viewbox.getX() + ($viewbox.getWidth() - $viewbox.getWidth() * scale) * (map_offset.x - $viewbox.getX()) / $viewbox.getWidth(), ViewBox.tween_fast);
+        $viewbox.y.set($viewbox.getY() + ($viewbox.getHeight() - $viewbox.getHeight() * scale) * (map_offset.y - $viewbox.getY()) / $viewbox.getHeight(), ViewBox.tween_fast);
+        $viewbox.width.set($viewbox.getWidth() * scale, ViewBox.tween_fast);
+        $viewbox.height.set($viewbox.getHeight() * scale, ViewBox.tween_fast);
     }
 
 
@@ -399,17 +399,17 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     }
 
 
-    $: viewbox_string = $viewbox.serialise();
+    let viewbox_string = $derived($viewbox.serialised);
 
-    function updateViewbox()
-    {
-        viewbox_string = $viewbox.serialise();
-    }
-
-    $viewbox.x.subscribe(updateViewbox);
-    $viewbox.y.subscribe(updateViewbox);
-    $viewbox.width.subscribe(updateViewbox);
-    $viewbox.height.subscribe(updateViewbox);
+    // function updateViewbox()
+    // {
+    //     viewbox_string = $viewbox.serialised();
+    // }
+    //
+    // $viewbox.x.subscribe(updateViewbox);
+    // $viewbox.y.subscribe(updateViewbox);
+    // $viewbox.width.subscribe(updateViewbox);
+    // $viewbox.height.subscribe(updateViewbox);
 </script>
 
 
@@ -425,12 +425,12 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         id="map"
         role="none"
         viewBox={viewbox_string}
-        on:click={handleLeftClick}
-        on:pointerdown={handlePointerDown}
-        on:pointerup={handlePointerUp}
-        on:pointermove={handlePointerMove}
-        on:wheel={handleWheel}
-        on:contextmenu={handleRightClick}>
+        onclick={handleLeftClick}
+        onpointerdown={handlePointerDown}
+        onpointerup={handlePointerUp}
+        onpointermove={handlePointerMove}
+        onwheel={handleWheel}
+        oncontextmenu={handleRightClick}>
         <image {...$via_map.attributes()}/>
 
         {#key $rr}

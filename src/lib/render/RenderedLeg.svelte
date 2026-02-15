@@ -28,7 +28,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import type { CourseLegRenderData } from "./render-data";
 
 
-    export let data: CourseLegRenderData;
+    interface Props {
+        data: CourseLegRenderData;
+    }
+
+    let { data }: Props = $props();
 
     
     const iof_line_attributes =

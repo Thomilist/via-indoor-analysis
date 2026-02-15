@@ -30,7 +30,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { svgTrianglePoints } from "$lib/utils/svg-helpers";
 
 
-    export let data: NodeRenderData;
+    interface Props {
+        data: NodeRenderData;
+    }
+
+    let { data }: Props = $props();
 
 
     const dimming_factor = 0.4;

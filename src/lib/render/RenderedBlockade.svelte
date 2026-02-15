@@ -26,7 +26,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import type { BlockadeRenderData } from "./render-data";
 
 
-    export let data: BlockadeRenderData;
+    interface Props {
+        data: BlockadeRenderData;
+    }
+
+    let { data }: Props = $props();
 
     
     const iof_line_attributes =

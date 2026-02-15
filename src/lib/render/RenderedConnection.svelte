@@ -24,7 +24,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 <script lang="ts">
     import type { ConnectionRenderData } from "./render-data";
 
-    export let data: ConnectionRenderData;
+    interface Props {
+        data: ConnectionRenderData;
+    }
+
+    let { data }: Props = $props();
 
     const stroke_width = 1.5;
     const highlight_scaling = data.highlighted ? 4 : 1;

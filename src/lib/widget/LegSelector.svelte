@@ -22,6 +22,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import { FinishControlMapNode, StartControlMapNode } from "$lib/map-graph/node";
     import { iof_print } from "$lib/render/iof";
     import { rerender } from "$lib/render/rerender";
@@ -32,10 +34,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
     let leg_label =
-    {
+    $state({
         a: "",
         b: ""
-    };
+    });
 
 
     async function updateLegSelection()
@@ -80,8 +82,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         await updateLegSelection();
     });
 
-
-    $: $course_index, updateLegSelection();
+    course_index.subscribe(updateLegSelection);
 </script>
 
 
@@ -94,14 +95,14 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 <div class="leg-selector">
     <label class="leg-select-previous">
-        <button class="leg-select-button" on:click={previous}></button>
+        <button class="leg-select-button" onclick={previous}></button>
         <PanDirectionSymbol direction="left" size={28}/>
     </label>
     
     <output>{`${leg_label.a} - ${leg_label.b}`}</output>
     
     <label class="leg-select-next">
-        <button class="leg-select-button" on:click={next}></button>
+        <button class="leg-select-button" onclick={next}></button>
         <PanDirectionSymbol direction="right" size={28}/>
     </label>
 </div>

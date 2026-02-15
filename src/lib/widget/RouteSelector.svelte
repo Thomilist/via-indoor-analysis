@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: `<div>` cannot be a child of `<tr>`. `<tr>` only allows these children: `<th>`, `<td>`, `<style>`, `<script>`, `<template>`. The browser will 'repair' the HTML (by moving, removing, or inserting elements) which breaks Svelte's assumptions about the structure of your components.
+https://svelte.dev/e/node_invalid_placement -->
 <!--
 
 via-indoor-analysis: Route choice analysis tool for indoor sprint 
@@ -40,57 +42,54 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     <table class="route-selector-table">
         <thead>
             <tr>
-                <div>
-                    <th class="highlight">
-                        🔍
-                    </th>
-                    
-                    <th class="route-choice-header">
-                        {({DA: "Vejvalg", EN: "Route choices"}[$lang])}
-                    </th>
-                </div>
+                <th class="highlight">
+                    🔍
+                </th>
+
+                <th class="route-choice-header">
+                    {({DA: "Vejvalg", EN: "Route choices"}[$lang])}
+                </th>
             </tr>
         </thead>
     
         <tbody>
             {#each $current_routes as route, index (`RouteSelectorEntry ${route.id} ${Route.flatten(route).map(node => node.id)}`)}
-                <tr>
-                    <label for="route{index}">
-                        <div>
-                            <td class="highlight">
-                                <input type="checkbox" id="route{index}" bind:checked={route.highlighted} on:change={rerender}/>
-                            </td>
-                            <td class="number">
-                                {`${index + 1}`}
-                            </td>
-    
-                            <td class="colour">
-                                <svg>
-                                    <rect width=100% height=100% fill={route.colour}/>
-                                </svg>
-                            </td>
+                <tr onclick={() => {route.highlighted = !route.highlighted; rerender()}}>
+                    <td>
+                        <div class="highlight">
+                            <input type="checkbox" id="route{index}" bind:checked={route.highlighted} onchange={rerender}/>
                         </div>
-    
-                        <div>
-                            <td class="distance-value">
-                                {Math.round(route.distance.value())}
-                            </td>
-    
-                            <td class="distance-unit">
-                                m
-                            </td>
+
+                        <div class="number">
+                            {`${index + 1}`}
                         </div>
-    
-                        <div>
-                            <td class="elevation-value">
-                                {route.elevation_gain}
-                            </td>
-    
-                            <td class="elevation-unit">
-                                <UpstairsSymbol/>
-                            </td>
+
+                        <div class="colour">
+                            <svg>
+                                <rect width=100% height=100% fill={route.colour}/>
+                            </svg>
                         </div>
-                    </label>
+                    </td>
+
+                    <td>
+                        <div class="distance-value">
+                            {Math.round(route.distance.value())}
+                        </div>
+
+                        <div class="distance-unit">
+                            m
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="elevation-value">
+                            {route.elevation_gain}
+                        </div>
+
+                        <div class="elevation-unit">
+                            <UpstairsSymbol/>
+                        </div>
+                    </td>
                 </tr>
             {/each}
         </tbody>

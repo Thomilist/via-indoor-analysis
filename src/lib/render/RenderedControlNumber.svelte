@@ -29,7 +29,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import type { ControlNumberRenderData } from "./render-data";
 
 
-    export let data: ControlNumberRenderData;
+    interface Props {
+        data: ControlNumberRenderData;
+    }
+
+    let { data }: Props = $props();
 
 
     const inline_style = `

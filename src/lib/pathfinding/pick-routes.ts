@@ -344,7 +344,7 @@ function filterBySameness(routes: Route[], max_sameness: number)
 }
 
 
-function useRoutes(routes: Route[])
+export function useRoutes(routes: Route[])
 {
     routes.sort(Route.sortByDistance);
     routes.forEach((route, index) => route.updateColour(index));
@@ -395,7 +395,6 @@ export function fetchRoutes()
 
     restoreRoute(routes, least_elevation);
 
-    useRoutes(routes);
     return routes;
 }
 

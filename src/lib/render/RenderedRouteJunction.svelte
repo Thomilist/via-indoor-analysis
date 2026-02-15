@@ -27,7 +27,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import type { RouteJunctionRenderData } from "./render-data";
 
 
-    export let data: RouteJunctionRenderData;
+    interface Props {
+        data: RouteJunctionRenderData;
+    }
+
+    let { data }: Props = $props();
 
 
     const radius = $via_map.distanceToMapPixels(new Distance(0.4, "m"), "measure") * (data.highlighted ? 1.5 : 1);

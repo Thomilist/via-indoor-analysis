@@ -31,7 +31,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { directionChange, isPortalRouteSegment, radiusFromArc } from "$lib/utils/misc";
 
 
-    export let data: RouteSegmentRenderData;
+    interface Props {
+        data: RouteSegmentRenderData;
+    }
+
+    let { data }: Props = $props();
 
 
     const portal = isPortalRouteSegment(data);

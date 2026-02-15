@@ -25,8 +25,12 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { svgTrianglePoints } from "$lib/utils/svg-helpers";
     import type { PanDirection } from "$lib/viewbox";
 
-    export let direction: PanDirection;
-    export let size: number;
+    interface Props {
+        direction: PanDirection;
+        size: number;
+    }
+
+    let { direction, size }: Props = $props();
 
     const rotation = Math.PI * (() =>
     {

@@ -1,6 +1,6 @@
 <!--
 
-via-indoor-analysis: Route choice analysis tool for indoor sprint 
+via-indoor-analysis: Route choice analysis tool for indoor sprint
 orienteering at VIA University College Horsens.
 Copyright (C) 2024 Thomas Emil Jensen
 
@@ -21,29 +21,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-<script lang="ts">
-    import { Distance } from "$lib/utils/distance";
-    import { via_map } from "$lib/state";
-    import { iof_print } from "./iof";
-    import type { ControlNodeCenterRenderData } from "./render-data";
-
-
-    interface Props {
-        data: ControlNodeCenterRenderData;
-    }
-
-    let { data }: Props = $props();
-
-
-    const radius = $via_map.distanceToMapPixels(new Distance(0.1, "m"), "measure");
-</script>
+<style>
+    @import "$lib/style/controls-divider.css";
+</style>
 
 
 
-<circle
-    cx={data.control.x}
-    cy={data.control.y}
-    r={radius}
-    fill={iof_print.colour}
-    fill-opacity={iof_print["opacity"]}
-/>
+<hr>

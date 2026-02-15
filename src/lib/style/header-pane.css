@@ -23,6 +23,9 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 .header
 {
+    --source-link-color: white;
+
+    grid-area: header;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -46,16 +49,19 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         {
             height: min-content;
         }
+    }
 
-        & .source-link
-        {
-            color: white;
+    /* Mobile, portrait */
+    @media (width < 800px) and (orientation: portrait)
+    {
+        height: calc(var(--header-height) * 0.6);
+    }
 
-            & svg
-            {
-                fill: white;
-            }
-        }
+    /* Mobile, landscape */
+    @media (height < 800px) and (orientation: landscape)
+    {
+        width: var(--controls-width);
+        height: calc(var(--header-height) * 0.6);
     }
 
     /* Mobile, portrait or landscape */
@@ -66,9 +72,15 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             font-size: small;
         }
 
-        & .mode-selector, .source-link
+        & :global(.mode-selector), :global(.source-link)
         {
             display: none;
         }
+    }
+
+    /* Desktop, portrait or landscape */
+    @media (width >= 800px) and (orientation: portrait), (height >= 800px) and (orientation: landscape)
+    {
+        height: var(--header-height);
     }
 }

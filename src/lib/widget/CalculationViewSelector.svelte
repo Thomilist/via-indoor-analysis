@@ -32,7 +32,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         { value: "Legs", DA: "Stræk", EN: "Legs"}
     ];
 
-    $: $calculation_view, rerender();
+    calculation_view.subscribe(rerender);
 </script>
 
 

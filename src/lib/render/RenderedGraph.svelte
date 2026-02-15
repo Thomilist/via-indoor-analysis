@@ -24,9 +24,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 <script lang="ts">
     import { BlockadeMapNode, ControlMapNode, MapNode, WaypointMapNode } from "$lib/map-graph/node";
     import { pairAlreadyIncluded, pairsEqual, type Pair } from "$lib/utils/pairs";
-    import { fetchRoutes } from "$lib/pathfinding/pick-routes";
+    import { fetchRoutes, useRoutes } from "$lib/pathfinding/pick-routes";
     import { routeSegments } from "$lib/pathfinding/split-routes";
-    import { calculation_view, course_index, courses, current_leg, edit_mode, map_graph, mode } from "$lib/state";
+    import {
+        calculation_view, course_index, courses, current_leg, current_routes, edit_mode, map_graph, mode
+    } from "$lib/state";
     import RenderedConnection from "./RenderedConnection.svelte";
     import RenderedControlNodeCenter from "./RenderedControlNodeCenter.svelte";
     import RenderedControlNumber from "./RenderedControlNumber.svelte";
@@ -41,7 +43,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
     // Nodes to render + their metadata.
-    $: node_render_data = $map_graph.nodes
+    let node_render_data = $derived($map_graph.nodes
         // General visibility filtering.
         .filter(node =>
         {
@@ -131,11 +133,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             }
 
             return data;
-        });
+        }));
 
 
     // Nodes to highlight.
-    $: node_highlight_render_data = node_render_data
+    let node_highlight_render_data = $derived(node_render_data
         .filter(data =>
         {
             switch ($mode)
@@ -147,11 +149,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         .map(data =>
         {
             return ((): NodeHighlightRenderData => { return { node: data.node }; })();
-        });
+        }));
 
 
     // Points to render at control node centers.
-    $: control_node_center_render_data = node_render_data
+    let control_node_center_render_data = $derived(node_render_data
         .filter(data =>
         {
             if (!(data.node instanceof ControlMapNode)) { return false; }
@@ -174,11 +176,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         .map(data =>
         {
             return ((): ControlNodeCenterRenderData => { return { control: data.node as ControlMapNode } })();
-        });
+        }));
 
 
     // Connections to render + their metadata.
-    $: connection_render_data = $map_graph.nodes
+    let connection_render_data = $derived($map_graph.nodes
         // General visibility filtering.
         .filter(node =>
         {
@@ -304,36 +306,46 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             }
 
             return data;
-        });
+        }));
 
-
-    // Route segments to render + their metadata.
-    $: route_segment_render_data = (() =>
+    let should_render_route_segments = $derived((() =>
+    {
+        switch ($mode)
         {
-            switch ($mode)
+            case "View": return true;
+            case "Edit":
             {
-                case "View": return true;
-                case "Edit":
+                switch ($edit_mode)
                 {
-                    switch ($edit_mode)
+                    case "Nodes": return false;
+                    case "Connections": return false;
+                    case "Courses": return false;
+                    case "Calculations":
                     {
-                        case "Nodes": return false;
-                        case "Connections": return false;
-                        case "Courses": return false;
-                        case "Calculations":
+                        switch ($calculation_view)
                         {
-                            switch ($calculation_view)
-                            {
-                                case "Paths": return false;
-                                case "Legs": return true;
-                            }
+                            case "Paths": return false;
+                            case "Legs": return true;
                         }
                     }
                 }
             }
-        })()
+        }
+
+        return false;
+    })());
+
+    let routes = $derived(fetchRoutes());
+
+    $effect(() => {
+        useRoutes(routes);
+    });
+
+    // Route segments to render + their metadata.
+    let route_segment_render_data = $derived(
+        should_render_route_segments
         // Fetch segments if mode is appropriate.
-        ? routeSegments(fetchRoutes())
+        ? routeSegments(routes)
             // Sort by height to draw higher segments on top,
             // with portal segments on top of normal segments.
             .sort((a, b) =>
@@ -343,15 +355,15 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
                 if (!portal_a && portal_b) { return -1; }
                 if (portal_a && !portal_b) { return 1; }
-                
+
                 return averageHeight(a.nodes) - averageHeight(b.nodes);
             })
         // No segments otherwise.
-        : [];
+        : []);
 
 
     // Route junctions to render.
-    $: route_junction_render_data = route_segment_render_data
+    let route_junction_render_data = $derived(route_segment_render_data
         .reduce((data, segment) =>
         {
             const from = segment.nodes.at(0);
@@ -376,11 +388,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             });
 
             return data;
-        }, [] as RouteJunctionRenderData[]);
+        }, [] as RouteJunctionRenderData[]));
 
 
     // Course legs to render.
-    $: course_leg_render_data = $courses[$course_index].segment("start", "finish")
+    let course_leg_render_data = $derived($courses[$course_index].segment("start", "finish")
         // General visibility filtering.
         .filter(control =>
         {
@@ -416,11 +428,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         .filter((leg, index, legs) =>
         {
             return !pairAlreadyIncluded(leg, index, legs, "any");
-        });
+        }));
 
 
     // Control numbers to render.
-    $: control_number_render_data = [...$courses[$course_index].uniqueControls()]
+    let control_number_render_data = $derived([...$courses[$course_index].uniqueControls()]
         .filter(control =>
         {
             switch ($mode)
@@ -438,11 +450,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
                 }
             }
         })
-        .map(control => { return ((): ControlNumberRenderData => { return { control: control }; })() });
+        .map(control => { return ((): ControlNumberRenderData => { return { control: control }; })() }));
 
     
     // Blockades to render.
-    $: blockade_render_data = $map_graph.nodes
+    let blockade_render_data = $derived($map_graph.nodes
         // General visibility filtering.
         .filter(node =>
         {
@@ -490,7 +502,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         .filter((connection, index, connections) =>
         {
             return !pairAlreadyIncluded(connection, index, connections, "mirrored");
-        });
+        }));
 </script>
 
 

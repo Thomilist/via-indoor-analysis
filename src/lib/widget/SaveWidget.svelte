@@ -39,4 +39,4 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     EN: "Save the current setup to a file."
 }[$lang])}</p>
 
-<button on:click={save}>{({DA: "Gem og download opsætning", EN: "Save and download setup"}[$lang])}</button>
+<button onclick={save}>{({DA: "Gem og download opsætning", EN: "Save and download setup"}[$lang])}</button>

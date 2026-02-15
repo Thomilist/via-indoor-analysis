@@ -22,6 +22,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import { Distance } from "$lib/utils/distance";
     import { ControlMapNode, FinishControlMapNode, MapNode, StartControlMapNode, WaypointMapNode } from "$lib/map-graph/node";
     import { via_map, viewbox } from "$lib/state";
@@ -31,10 +33,14 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { paneRect } from "$lib/viewbox";
 
 
-    export let data: NodeHighlightRenderData;
+    interface Props {
+        data: NodeHighlightRenderData;
+    }
+
+    let { data = $bindable() }: Props = $props();
 
 
-    $: colour = { hovered: "red", selected: "blue" };
+    let colour = $derived({ hovered: "red", selected: "blue" });
 
     const normal_node_radius = $via_map.distanceToMapPixels(new Distance(0.4, "m"), "measure");
     const landmark_node_radius = normal_node_radius * 2;
@@ -55,7 +61,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     const outer_highlight_segment_size = outer_highlight_radius * Math.PI / highlight_segments;
 
     // Make partially transparent at high zoom levels.
-    $: highlight_opacity = (() =>
+    let highlight_opacity = $derived((() =>
     {
         const map_pane_rect = paneRect(name.pane.map);
 
@@ -89,9 +95,9 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         }
 
         return 1;
-    })();
+    })());
 
-    $: { data.node.interact_range = Math.max(( data.node.selected ? base_interact_range * 1.2 + highlight_stroke_width * 1.5 : base_interact_range * 1.2 ), 20); }
+    run(() => { data.node.interact_range = Math.max(( data.node.selected ? base_interact_range * 1.2 + highlight_stroke_width * 1.5 : base_interact_range * 1.2 ), 20); });
 </script>
 
 

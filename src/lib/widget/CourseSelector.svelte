@@ -73,7 +73,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         {({DA: "Vælg bane:", EN: "Select course:"}[$lang])}
     </label>
     
-    <select id="course-selector" bind:value={$course_index} on:change={rerender}>
+    <select id="course-selector" bind:value={$course_index} onchange={rerender}>
         {#each $courses as course, index (course.id)}
             <option value={index}>{`${course.name}`}</option>
         {/each}
@@ -83,7 +83,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 {#if $mode === "Edit"}
     <div class="course-create-delete">
-        <button on:click={createNewCourse}>{({DA: "Opret ny bane", EN: "Create new course"}[$lang])}</button>
-        <button on:click={deleteThisCourse}>{({DA: "Slet denne bane", EN: "Delete this course"}[$lang])}</button>
+        <button onclick={createNewCourse}>{({DA: "Opret ny bane", EN: "Create new course"}[$lang])}</button>
+        <button onclick={deleteThisCourse}>{({DA: "Slet denne bane", EN: "Delete this course"}[$lang])}</button>
     </div>
 {/if}

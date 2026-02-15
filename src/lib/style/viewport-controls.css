@@ -21,9 +21,9 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-.view-controls
+.viewport-controls
 {
-    & .view-fit-controls
+    & .viewport-fit-controls
     {
         display: flex;
         gap: 0.5em;
@@ -32,12 +32,12 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     /* Mobile, portrait or landscape */
     @media (width < 800px) and (orientation: portrait), (height < 800px) and (orientation: landscape)
     {
-        & .view-pan-controls, .view-zoom-controls
+        & .viewport-pan-controls, .viewport-zoom-controls
         {
             display: none;
         }
 
-        & .view-fit-controls
+        & .viewport-fit-controls
         {
             flex-direction: row;
             align-items: center;
@@ -61,7 +61,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         place-content: center;
         place-items: center;
 
-        & .view-pan-controls
+        & .viewport-pan-controls
         {
             width: min-content;
             height: min-content;
@@ -72,39 +72,39 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
                 ". down .";
             gap: 0;
             
-            & .view-pan-button
+            & .viewport-pan-button
             {
                 display: none;
             }
         
-            & .view-pan-left
+            & .viewport-pan-left
             {
                 grid-area: left;
             }
         
-            & .view-pan-up
+            & .viewport-pan-up
             {
                 grid-area: up;
             }
         
-            & .view-pan-down
+            & .viewport-pan-down
             {
                 grid-area: down;
             }
         
-            & .view-pan-right
+            & .viewport-pan-right
             {
                 grid-area: right;
             }
         }
 
-        & .view-zoom-controls
+        & .viewport-zoom-controls
         {
             display: flex;
             flex-direction: column;
             gap: 0.5em;
             
-            & .view-zoom-button
+            & .viewport-zoom-button
             {
                 width: 2em;
                 height: 2em;
@@ -115,7 +115,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             }
         }
 
-        & .view-fit-controls
+        & .viewport-fit-controls
         {
             grid-area: fit;
             flex-direction: column;

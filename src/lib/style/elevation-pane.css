@@ -23,5 +23,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 .elevation
 {
+    grid-area: elevation;
+    height: var(--elevation-height);
     border-top: 2px solid black;
 }

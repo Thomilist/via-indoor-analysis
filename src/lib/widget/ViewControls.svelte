@@ -22,6 +22,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
+    import ControlsDivider from "$lib/widget/ControlsDivider.svelte";
     import CourseInformation from "./CourseInformation.svelte";
     import CourseSelector from "./CourseSelector.svelte";
     import LegSelector from "./LegSelector.svelte";
@@ -31,9 +32,9 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <CourseSelector/>
-<hr>
+<ControlsDivider/>
 <CourseInformation/>
-<hr>
+<ControlsDivider/>
 <LegSelector/>
-<hr>
+<ControlsDivider/>
 <RouteSelector/>

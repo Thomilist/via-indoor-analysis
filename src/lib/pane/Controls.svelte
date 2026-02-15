@@ -24,6 +24,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 <script lang="ts">
     import { name } from "$lib/names";
     import { mode } from "$lib/state";
+    import ControlsDivider from "$lib/widget/ControlsDivider.svelte";
     import EditControls from "$lib/widget/EditControls.svelte";
     import SourceLink from "$lib/widget/SourceLink.svelte";
     import ViewControls from "$lib/widget/ViewControls.svelte";
@@ -45,8 +46,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         <ViewControls/>
     {/if}
     
-    <hr>
+    <ControlsDivider/>
 
-    <SourceLink/>
+    <div class="source-link-wrapper">
+        <SourceLink/>
+    </div>
+
     <ViewportControls/>
 </div>

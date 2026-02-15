@@ -25,6 +25,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { findLegSuggestions } from "$lib/pathfinding/suggest-legs";
     import { rerender } from "$lib/render/rerender";
     import { calculateState, lang } from "$lib/state";
+    import ControlsDivider from "$lib/widget/ControlsDivider.svelte";
     import CalculationViewSelector from "./CalculationViewSelector.svelte";
     import RouteFilteringWidget from "./RouteFilteringWidget.svelte";
 
@@ -44,11 +45,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-<button on:click={calculate}>{({DA: "Beregn", EN: "Calculate"}[$lang])}</button>
+<button onclick={calculate}>{({DA: "Beregn", EN: "Calculate"}[$lang])}</button>
 
-<button on:click={suggestLegs}>{({DA: "Foreslå stræk", EN: "Suggest legs"}[$lang])}</button>
+<button onclick={suggestLegs}>{({DA: "Foreslå stræk", EN: "Suggest legs"}[$lang])}</button>
 
-<hr>
+<ControlsDivider/>
 <CalculationViewSelector/>
-<hr>
+<ControlsDivider/>
 <RouteFilteringWidget/>

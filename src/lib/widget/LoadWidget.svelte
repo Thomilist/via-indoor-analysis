@@ -25,7 +25,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { lang, loadStateFromFile } from "$lib/state";
 
 
-    let ready: boolean = false;
+    let ready: boolean = $state(false);
     let file_input: HTMLInputElement;
     
 
@@ -55,6 +55,6 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     EN: "Load a new setup from a file. The current setup will be overwritten."
 }[$lang])}</p>
 
-<input on:change={(event) => update(event)} type="file" accept=".json,application/json"/>
+<input onchange={(event) => update(event)} type="file" accept=".json,application/json"/>
 
-<button on:click={load} disabled={!ready}>{({DA: "Anvend", EN: "Apply"}[$lang])}</button>
+<button onclick={load} disabled={!ready}>{({DA: "Anvend", EN: "Apply"}[$lang])}</button>

@@ -21,33 +21,22 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-:global(.controls)
-{
-    --controls-padding: 1em;
-}
-
 .controls
 {
+    --controls-padding: 1em;
+    --source-link-color: blue;
+
+    grid-area: controls;
     overflow: hidden;
     min-height: 0;
 
-    & h2
+    & :global(h2)
     {
         margin: 0;
     }
 
-    & p
+    & :global(p)
     {
-        margin: 0;
-    }
-
-    & hr
-    {
-        width: 100%;
-        height: 1px;
-        min-height: 1px;
-        border: none;
-        background-color: gray;
         margin: 0;
     }
 
@@ -60,7 +49,14 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     /* Mobile, portrait */
     @media (width < 800px) and (orientation: portrait)
     {
+        height: var(--controls-height-mobile);
         border-top: 1px solid black;
+    }
+
+    /* Mobile, landscape */
+    @media (height < 800px) and (orientation: landscape)
+    {
+        width: var(--controls-width);
     }
 
     /* Mobile, portrait or landscape */
@@ -78,7 +74,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             ". . . . ."
             ". course-select course-select leg-select ."
             ". course-info course-info leg-select ."
-            ". source-link view-controls view-controls .";
+            ". source-link viewport-controls viewport-controls .";
         
         & *
         {
@@ -86,75 +82,53 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             min-height: 0;
         }
 
-        & .course-select
+        & :global(.course-select)
         {
             grid-area: course-select;
         }
 
-        & .course-information
+        & :global(.course-information)
         {
             grid-area: course-info;
         }
 
-        & .leg-selector
+        & :global(.leg-selector)
         {
             grid-area: leg-select;
         }
 
-        & .route-selector
+        & :global(.route-selector)
         {
             grid-area: route-select;
             align-self: start;
-            max-height: 100%;
-
-            &::before
-            {
-                content: "";
-                position: sticky;
-                top: 99%;
-                width: 100%;
-                height: 1px;
-                background-color: black;
-                z-index: 1;
-            }
         }
 
-        & .source-link
+        & .source-link-wrapper
         {
             grid-area: source-link;
-            color: blue;
-
-            & svg
-            {
-                fill: blue;
-            }
         }
 
-        & .view-controls
+        & :global(.viewport-controls)
         {
-            grid-area: view-controls;
-        }
-        
-        & hr
-        {
-            display: none;
+            grid-area: viewport-controls;
         }
     }
 
     /* Desktop, portrait or landscape */
     @media (width >= 800px) and (orientation: portrait), (height >= 800px) and (orientation: landscape)
     {
+        width: var(--controls-width);
         padding: var(--controls-padding);
         display: flex;
         flex-direction: column;
         gap: var(--controls-padding);
 
-        & .source-link
+        & .source-link-wrapper
         {
             display: none;
         }
 
-        & .view-controls
+        & :global(.viewport-controls)
         {
             margin-top: auto;
         }

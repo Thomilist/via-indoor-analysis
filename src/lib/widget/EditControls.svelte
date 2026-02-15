@@ -23,6 +23,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 <script lang="ts">
     import { calculation_view, edit_mode, lang } from "$lib/state";
+    import ControlsDivider from "$lib/widget/ControlsDivider.svelte";
     import CalculationManager from "./CalculationManager.svelte";
     import CourseEditor from "./CourseEditor.svelte";
     import CourseSelector from "./CourseSelector.svelte";
@@ -42,7 +43,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <EditModeSelector/>
-<hr>
+<ControlsDivider/>
 
 
 {#if $edit_mode === "Nodes"}
@@ -60,7 +61,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         <dd>{({DA: "Vælg flere punkter", EN: "Select multiple nodes"}[$lang])}</dd>
     </dl>
 
-    <hr>
+    <ControlsDivider/>
 
     <NodeTypeSelector/>
     <NodeHeightInput/>
@@ -98,9 +99,9 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         <dd>{({DA: "Vælg flere poster", EN: "Select multiple controls"}[$lang])}</dd>
     </dl>
 
-    <hr>
+    <ControlsDivider/>
     <CourseSelector/>
-    <hr>
+    <ControlsDivider/>
     <CourseEditor/>
 
 {:else if $edit_mode === "Calculations"}
@@ -122,11 +123,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         </dl>
     {/if}
 
-    <hr>
+    <ControlsDivider/>
     <CalculationManager/>
 
 {:else if $edit_mode === "Files"}
     <SaveWidget/>
-    <hr>
+    <ControlsDivider/>
     <LoadWidget/>
 {/if}

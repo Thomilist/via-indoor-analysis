@@ -29,50 +29,50 @@ import type { Point } from "./utils/vector";
 import { ControlMapNode } from "./map-graph/node";
 import { browser } from "$app/environment";
 import { Route } from "./map-graph/route";
-import { tweened, type Tweened, type TweenedOptions } from "svelte/motion";
+import { Tween } from "svelte/motion";
 import { quadInOut } from "svelte/easing";
 import { quadraticBezierControlPoint } from "./utils/svg-helpers";
 
 
 export class ViewBox
 {
-    #initial_x: number = 0;
-    #initial_y: number = 0;
-    #initial_width: number;
-    #initial_height: number;
+    readonly #initial_x: number = 0;
+    readonly #initial_y: number = 0;
+    readonly #initial_width: number;
+    readonly #initial_height: number;
 
     static tween_smooth = { duration: 400, easing: quadInOut };
     static tween_fast = { duration: 0 };
 
-    x: Tweened<number> = tweened(0, ViewBox.tween_smooth);
-    y: Tweened<number> = tweened(0, ViewBox.tween_smooth);
-    width: Tweened<number>;
-    height: Tweened<number>;
+    x: Tween<number> = new Tween(0, ViewBox.tween_smooth);
+    y: Tween<number> = new Tween(0, ViewBox.tween_smooth);
+    width: Tween<number>;
+    height: Tween<number>;
 
     constructor(map: MapMeta)
     {
         this.#initial_width = map.width;
         this.#initial_height = map.height;
-        this.width = tweened(this.#initial_width, ViewBox.tween_smooth);
-        this.height = tweened(this.#initial_height, ViewBox.tween_smooth);
+        this.width = new Tween(this.#initial_width, ViewBox.tween_smooth);
+        this.height = new Tween(this.#initial_height, ViewBox.tween_smooth);
     }
 
-    getX() { return get(this.x); }
-    getY() { return get(this.y); }
-    getWidth() { return get(this.width); }
-    getHeight() { return get(this.height); }
+    getX() { return this.x.current; }
+    getY() { return this.y.current; }
+    getWidth() { return this.width.current; }
+    getHeight() { return this.height.current; }
 
-    serialise()
+    get serialised()
     {
         return `${this.getX()} ${this.getY()} ${this.getWidth()} ${this.getHeight()}`;
     }
 
     reset()
     {
-        this.x.set(this.#initial_x);
-        this.y.set(this.#initial_y);
-        this.width.set(this.#initial_width);
-        this.height.set(this.#initial_height);
+        this.x.target = this.#initial_x;
+        this.y.target = this.#initial_y;
+        this.width.target = this.#initial_width;
+        this.height.target = this.#initial_height;
     }
 
     fit(points?: Point[], margin?: number)
@@ -120,26 +120,26 @@ export class ViewBox
         // Bounding box too wide for map pane.
         if (bounds_aspect_ratio > map_pane_aspect_ratio)
         {
-            this.width.set(bounds.width * map_pane_rect.width / map_pane_rect.width);
-            this.height.set(bounds.width / map_pane_aspect_ratio);
-            this.x.set(bounds.x);
-            this.y.set(bounds.y - (bounds.width / map_pane_aspect_ratio) / 2 + bounds.height / 2);
+            this.width.target = bounds.width * map_pane_rect.width / map_pane_rect.width;
+            this.height.target = bounds.width / map_pane_aspect_ratio;
+            this.x.target = bounds.x;
+            this.y.target = bounds.y - (bounds.width / map_pane_aspect_ratio) / 2 + bounds.height / 2;
         }
         // Bounding box too tall for map pane.
         else if (bounds_aspect_ratio < map_pane_aspect_ratio)
         {
-            this.width.set(bounds.height * map_pane_aspect_ratio);
-            this.height.set(bounds.height * map_pane_rect.height / map_pane_rect.height);
-            this.x.set(bounds.x - (bounds.height * map_pane_aspect_ratio) / 2 + bounds.width / 2);
-            this.y.set(bounds.y);
+            this.width.target = bounds.height * map_pane_aspect_ratio;
+            this.height.target = bounds.height * map_pane_rect.height / map_pane_rect.height;
+            this.x.target = bounds.x - (bounds.height * map_pane_aspect_ratio) / 2 + bounds.width / 2;
+            this.y.target = bounds.y;
         }
         // Bounding box fits map pane perfectly.
         else
         {
-            this.width.set(bounds.width * map_pane_rect.width / map_pane_rect.width);
-            this.height.set(bounds.height * map_pane_rect.height / map_pane_rect.height);
-            this.x.set(bounds.x);
-            this.y.set(bounds.y);
+            this.width.target = bounds.width * map_pane_rect.width / map_pane_rect.width;
+            this.height.target = bounds.height * map_pane_rect.height / map_pane_rect.height;
+            this.x.target = bounds.x;
+            this.y.target = bounds.y;
         }
     }
 
@@ -149,19 +149,19 @@ export class ViewBox
         
         switch (direction)
         {
-            case "left": this.x.update(x => x - get(this.width) / amount); break;
-            case "right": this.x.update(x => x + get(this.width) / amount); break;
-            case "up": this.y.update(y => y - get(this.height) / amount); break;
-            case "down": this.y.update(y => y + get(this.height) / amount); break;
+            case "left": this.x.target = this.x.current - this.width.current / amount; break;
+            case "right": this.x.target = this.x.current + this.width.current / amount; break;
+            case "up": this.y.target = this.y.current - this.height.current / amount; break;
+            case "down": this.y.target = this.y.current + this.height.current / amount; break;
         }
     }
 
-    pan2D(offset: Pick<Point, "x" | "y">, tweening?: TweenedOptions<number>)
+    pan2D(offset: Pick<Point, "x" | "y">, tweening?: any)
     {
         tweening = tweening ?? ViewBox.tween_fast;
 
-        this.x.update(x => x - offset.x, tweening);
-        this.y.update(y => y - offset.y, tweening);
+        this.x.set(this.x.current - offset.x, tweening);
+        this.y.set(this.y.current - offset.y, tweening);
     }
 
     zoom(direction: ZoomDirection, scaling?: number)
@@ -173,13 +173,13 @@ export class ViewBox
 
         const scale = direction === "out" ? scaling : 1 / scaling;
 
-        const width = get(this.width);
-        const height = get(this.height);
+        const width = this.width.target;
+        const height = this.height.target;
 
-        this.x.update(x => x + (width - width * scale) * (map_pane_rect.width / 2) / map_pane_rect.width);
-        this.y.update(y => y + (height - height * scale) * (map_pane_rect.height / 2) / map_pane_rect.height);
-        this.width.update(w => w * scale);
-        this.height.update(h => h * scale);
+        this.x.target += (width - width * scale) * (map_pane_rect.width / 2) / map_pane_rect.width;
+        this.y.target += (height - height * scale) * (map_pane_rect.height / 2) / map_pane_rect.height;
+        this.width.target *= scale;
+        this.height.target *= scale;
     }
 }
 

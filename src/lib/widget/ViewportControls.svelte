@@ -59,29 +59,29 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <style>
-    @import "$lib/style/view-controls.css";
+    @import "$lib/style/viewport-controls.css";
 </style>
 
 
 
-<div class="view-controls">
-    <div class="view-pan-controls">
+<div class="viewport-controls">
+    <div class="viewport-pan-controls">
         {#each pan_directions as direction}
-            <label class="view-pan-{direction}">
-                <button class="view-pan-button" on:click={() => $viewbox.pan1D(direction)}></button>
+            <label class="viewport-pan-{direction}">
+                <button class="viewport-pan-button" onclick={() => $viewbox.pan1D(direction)}></button>
                 <PanDirectionSymbol {direction} size={40}/>
             </label>
         {/each}
     </div>
 
-    <div class="view-zoom-controls">
+    <div class="viewport-zoom-controls">
         {#each zoom_directions as direction}
-            <button class="view-zoom-button {direction.value}" on:click={() => $viewbox.zoom(direction.value)}>{direction.label}</button>
+            <button class="viewport-zoom-button {direction.value}" onclick={() => $viewbox.zoom(direction.value)}>{direction.label}</button>
         {/each}
     </div>
 
-    <div class="view-fit-controls">
-        <button class="view-fit" on:click={fit}>{({DA: "Tilpas visning", EN: "Fit view"}[$lang])}</button>
-        <button class="view-reset" on:click={reset}>{({DA: "Nulstil visning", EN: "Reset view"}[$lang])}</button>
+    <div class="viewport-fit-controls">
+        <button class="viewport-fit" onclick={fit}>{({DA: "Tilpas visning", EN: "Fit view"}[$lang])}</button>
+        <button class="viewport-reset" onclick={reset}>{({DA: "Nulstil visning", EN: "Reset view"}[$lang])}</button>
     </div>
 </div>
