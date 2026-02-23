@@ -38,27 +38,33 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     let { data }: Props = $props();
 
 
-    const portal = isPortalRouteSegment(data);
+    const portal = $derived(isPortalRouteSegment(data));
     const portal_dimming_factor = 1;
     const portal_arc_size_ratio = 6;
 
-    const width = $via_map.distanceToMapPixels(new Distance(0.65, "m"), "measure") * (data.highlighted ? 1.5 : 1);
-    const portal_dash_length = 3 * width;
+    const width = $derived($via_map.distanceToMapPixels(new Distance(0.65, "m"), "measure") * (data.highlighted ? 1.5 : 1));
+    const portal_dash_length = $derived(3 * width);
 
-    const lane_count = data.highlighted
+    const lane_count = $derived(data.highlighted
         ? data.routes.reduce((accumulator, route) => route.highlighted ? accumulator + 1 : accumulator, 0)
-        : data.routes.length;
-    const lane_width = width / lane_count;
+        : data.routes.length);
+    const lane_width = $derived(width / lane_count);
 
     type Lane = { colour: string, points: Point[] };
-    const lanes: Lane[] = [];
 
-    if (data.nodes.length > 1)
+    function createLanes(data: RouteSegmentRenderData): Lane[]
     {
+        if (data.nodes.length < 2)
+        {
+            return [];
+        }
+
+        const lanes: Lane[] = [];
+
         data.routes.filter(route => !(data.highlighted && !route.highlighted)).forEach(route =>
         {
             if (data.highlighted && !route.highlighted) { return; }
-            
+
             const lane: Lane = { colour: route.colour, points: [] };
 
             data.nodes.forEach((current_node, node_index, nodes) =>
@@ -69,7 +75,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
                 // 2 or 3 nodes.
                 const segment = [previous_node, current_node, next_node]
                     .filter(node => node instanceof MapNode);
-                
+
                 // Vector from first to last in the segment.
                 let segment_vector = new Vector();
 
@@ -121,9 +127,17 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
             lanes.push(lane);
         });
+
+        return lanes;
     }
 
-    const portal_arc_height_vector = portal ? portalRouteSegmentArcHeightVector({ a: data.nodes[0], b: data.nodes[1] }) : new Vector();
+    const lanes = $derived(createLanes(data));
+
+    const portal_arc_height_vector = $derived(
+        portal
+            ? portalRouteSegmentArcHeightVector({ a: data.nodes[0], b: data.nodes[1] })
+            : new Vector()
+    );
 </script>
 
 

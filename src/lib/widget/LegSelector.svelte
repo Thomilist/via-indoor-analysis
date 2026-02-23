@@ -22,8 +22,6 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import { FinishControlMapNode, StartControlMapNode } from "$lib/map-graph/node";
     import { iof_print } from "$lib/render/iof";
     import { rerender } from "$lib/render/rerender";

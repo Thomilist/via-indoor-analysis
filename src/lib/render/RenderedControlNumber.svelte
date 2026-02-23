@@ -74,10 +74,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         average_vector = average_vector.addOriginVector(new Vector({ a: data.control, b: neighbour }));
     });
 
-    const number_position_vector = average_vector
+    const number_position_vector = $derived(average_vector
         .unitVector(["x", "y"])
         .scale(-2.25 * iof_print.control_radius)
-        .translateWithOriginVector(new Vector({ b: data.control }));
+        .translateWithOriginVector(new Vector({ b: data.control })));
 </script>
 
 

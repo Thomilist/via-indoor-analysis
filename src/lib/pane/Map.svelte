@@ -400,16 +400,6 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
     let viewbox_string = $derived($viewbox.serialised);
-
-    // function updateViewbox()
-    // {
-    //     viewbox_string = $viewbox.serialised();
-    // }
-    //
-    // $viewbox.x.subscribe(updateViewbox);
-    // $viewbox.y.subscribe(updateViewbox);
-    // $viewbox.width.subscribe(updateViewbox);
-    // $viewbox.height.subscribe(updateViewbox);
 </script>
 
 

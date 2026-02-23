@@ -41,13 +41,12 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     const normal_node_radius = $via_map.distanceToMapPixels(new Distance(0.4, "m"), "measure");
     const landmark_node_radius = normal_node_radius * 1.25;
 
-    const iof_node_attributes =
-    {
+    const iof_node_attributes = $derived({
         fill: "none",
         stroke: iof_print.colour,
         "stroke-opacity": iof_print["opacity"] * (data.dimmed ? dimming_factor : 1),
         "stroke-width": iof_print["stroke-width"]
-    };
+    });
 
     const outline_attributes =
     {
@@ -57,11 +56,10 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         "stroke-width": iof_print["stroke-width"] * 1.5
     };
 
-    const node_position =
-    {
+    const node_position = $derived({
         cx: data.node.x,
         cy: data.node.y
-    };
+    });
 </script>
 
 

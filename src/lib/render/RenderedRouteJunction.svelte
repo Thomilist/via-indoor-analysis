@@ -34,7 +34,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     let { data }: Props = $props();
 
 
-    const radius = $via_map.distanceToMapPixels(new Distance(0.4, "m"), "measure") * (data.highlighted ? 1.5 : 1);
+    const radius = $derived($via_map.distanceToMapPixels(new Distance(0.4, "m"), "measure") * (data.highlighted ? 1.5 : 1));
 </script>
 
 

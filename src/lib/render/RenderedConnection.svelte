@@ -31,7 +31,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     let { data }: Props = $props();
 
     const stroke_width = 1.5;
-    const highlight_scaling = data.highlighted ? 4 : 1;
+    const highlight_scaling = $derived(data.highlighted ? 4 : 1);
 </script>
 
 

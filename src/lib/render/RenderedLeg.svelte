@@ -51,8 +51,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         "stroke-width": iof_print["stroke-width"] * 1.5
     };
 
-    const vector_ab = new Vector(data);
-    const unit_vector_ab = vector_ab.unitVector(["x", "y"]);
+    const vector_ab = $derived(new Vector(data));
+    const unit_vector_ab = $derived(vector_ab.unitVector(["x", "y"]));
 
     function offsetMagnitude(control: ControlMapNode)
     {
@@ -70,12 +70,12 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         }
     }
 
-    const offset_magnitude_a = offsetMagnitude(data.a);
-    const offset_magnitude_b = offsetMagnitude(data.b);
+    const offset_magnitude_a = $derived(offsetMagnitude(data.a));
+    const offset_magnitude_b = $derived(offsetMagnitude(data.b));
 
-    const vector_ab_offset = vector_ab
+    const vector_ab_offset = $derived(vector_ab
         .translateWithOriginVector(unit_vector_ab.scale(offset_magnitude_a))
-        .addOriginVector(unit_vector_ab.scale(- (offset_magnitude_a + offset_magnitude_b)));
+        .addOriginVector(unit_vector_ab.scale(- (offset_magnitude_a + offset_magnitude_b))));
 </script>
 
 

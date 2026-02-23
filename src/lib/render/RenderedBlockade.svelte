@@ -42,16 +42,16 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         "stroke-width": iof_print["stroke-width"] * 1.5,
     };
 
-    const mid_point: Point = {
+    const mid_point: Point = $derived({
         x: (data.a.x + data.b.x) / 2,
         y: (data.a.y + data.b.y) / 2,
         z: (data.a.z + data.b.z) / 2,
-    };
+    });
 
-    const blockade_vector = new Vector(data);
-    const direction_vector = Vector.createFromPointAndVector(mid_point, blockade_vector.normalXY()
+    const blockade_vector = $derived(new Vector(data));
+    const direction_vector = $derived(Vector.createFromPointAndVector(mid_point, blockade_vector.normalXY()
         .unitVector(["x", "y"])
-        .scale(20));
+        .scale(20)));
 </script>
 
 

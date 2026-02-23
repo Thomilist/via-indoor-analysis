@@ -22,8 +22,6 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import { Distance } from "$lib/utils/distance";
     import { ControlMapNode, FinishControlMapNode, MapNode, StartControlMapNode, WaypointMapNode } from "$lib/map-graph/node";
     import { via_map, viewbox } from "$lib/state";
@@ -97,7 +95,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         return 1;
     })());
 
-    run(() => { data.node.interact_range = Math.max(( data.node.selected ? base_interact_range * 1.2 + highlight_stroke_width * 1.5 : base_interact_range * 1.2 ), 20); });
+    $effect(() => { data.node.interact_range = Math.max(( data.node.selected ? base_interact_range * 1.2 + highlight_stroke_width * 1.5 : base_interact_range * 1.2 ), 20); });
 </script>
 
 

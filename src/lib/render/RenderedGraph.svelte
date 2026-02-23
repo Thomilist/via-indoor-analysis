@@ -262,6 +262,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
                             {
                                 data.highlighted = true;
                             }
+                            break;
                         }
                         case "Courses": break;
                         case "Calculations":
@@ -354,7 +355,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     let route_segment_render_data = $derived(
         should_render_route_segments
         // Fetch segments if mode is appropriate.
-        ? routeSegments(routes)
+        ? routeSegments($current_routes)
             // Sort by height to draw higher segments on top,
             // with portal segments on top of normal segments.
             .sort((a, b) =>
