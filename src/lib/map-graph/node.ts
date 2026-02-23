@@ -112,36 +112,43 @@ export class MapNode
             return;
         }
 
-        const blockadeNodes = (BlockadeMapNode.isBlockadeMapNode(this) ? 1 : 0)
+        const blockade_nodes = (BlockadeMapNode.isBlockadeMapNode(this) ? 1 : 0)
             + (BlockadeMapNode.isBlockadeMapNode(other) ? 1 : 0);
 
-        if (blockadeNodes == 1)
+        if (blockade_nodes == 1)
         {
             return;
         }
 
+        const directional = blockade_nodes == 2;
+
         this.disconnect(other);
 
         this.all_neighbours.add(other);
-        other.all_neighbours.add(this);
+
+        if (!directional)
+        {
+            other.all_neighbours.add(this);
+        }
 
         switch (relation)
         {
             case "Normal":
             {
                 this.normal_neighbours.add(other);
-                other.normal_neighbours.add(this);
+                if (!directional)
+                {
+                    other.normal_neighbours.add( this );
+                }
                 break;
             }
             case "Portal":
             {
-                if (blockadeNodes > 0)
-                {
-                    break;
-                }
-
                 this.portal_neighbours.add(other);
-                other.portal_neighbours.add(this);
+                if (!directional)
+                {
+                    other.portal_neighbours.add( this );
+                }
                 break;
             }
         }

@@ -41,11 +41,8 @@ export function findPaths()
         .filter(node => WaypointMapNode.isWaypointMapNode(node))
         .forEach((waypoint, index, waypoints) =>
         {
-            if (waypoint instanceof WaypointMapNode)
-            {
-                console.log(`Finding paths from waypoint ${waypoint.id}... (${index + 1}/${waypoints.length})`);
-                findShortestPaths(waypoint);
-            }
+            console.log(`Finding paths from waypoint ${waypoint.id}... (${index + 1}/${waypoints.length})`);
+            findShortestPaths(waypoint);
         });
     
     const time = Date.now() - start_time;
@@ -69,13 +66,14 @@ function updateBlockades()
             break;
         }
 
-        blockade_node.all_neighbours.forEach(node =>
+        blockade_node.normal_neighbours.forEach(node =>
         {
-            if (blockade_nodes.has(node))
-            {
-                get(blockades).push(new Blockade(blockade_node, node));
-                console.log("Added blockade");
-            }
+            get(blockades).push(new Blockade(blockade_node, node, "normal"));
+        });
+
+        blockade_node.portal_neighbours.forEach(node =>
+        {
+            get(blockades).push(new Blockade(blockade_node, node, "directional"));
         });
 
         blockade_nodes.delete(blockade_node);
@@ -118,16 +116,12 @@ function findShortestPaths(from: WaypointMapNode)
             {
                 if (current && unvisited_nodes.has(node))
                 {
-                    let blocked = false;
-
                     if (!current.node.portal_neighbours.has(node))
                     {
                         for (const blockade of get(blockades))
                         {
                             if (blockade.obstructsConnection({a: current.node, b: node}))
                             {
-                                console.log("BLOCKED");
-                                blocked = true;
                                 return;
                             }
                         }

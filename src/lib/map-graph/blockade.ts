@@ -21,25 +21,45 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
+import { Vector } from "$lib/utils/vector";
 import type { BlockadeMapNode, MapNode } from "./node";
 
 export class Blockade
 {
     a: BlockadeMapNode;
     b: BlockadeMapNode;
+    type: BlockadeType;
 
-    constructor(a: BlockadeMapNode, b: BlockadeMapNode)
+    constructor(a: BlockadeMapNode, b: BlockadeMapNode, type: BlockadeType)
     {
         this.a = a;
         this.b = b;
+        this.type = type;
     }
 
     obstructsConnection(connection: {a: MapNode, b: MapNode}): boolean
     {
-        return this.#doLineSegmentsIntersect(this.a.x, this.a.y, this.b.x, this.b.y, connection.a.x, connection.a.y, connection.b.x, connection.b.y);
+        if ( !Blockade.#doLineSegmentsIntersect(this.a.x, this.a.y, this.b.x, this.b.y, connection.a.x, connection.a.y, connection.b.x, connection.b.y) )
+        {
+            return false;
+        }
+
+        switch ( this.type )
+        {
+            case "normal":
+            {
+                return true;
+            }
+            case "directional":
+            {
+                const blockade_vector = new Vector(this);
+                const connection_vector = new Vector(connection);
+                return blockade_vector.normalXY().dotProductXY( connection_vector ) < 0;
+            }
+        }
     }
 
-    #doLineSegmentsIntersect(a1X: number, a1Y: number, a2X: number, a2Y: number, b1X: number, b1Y: number, b2X: number, b2Y: number): boolean
+    static #doLineSegmentsIntersect(a1X: number, a1Y: number, a2X: number, a2Y: number, b1X: number, b1Y: number, b2X: number, b2Y: number): boolean
     {
         const dxA = a2X - a1X;
         const dyA = a2Y - a1Y;
@@ -52,3 +72,6 @@ export class Blockade
         return (p0 * p1 < 0) && (p2 * p3 < 0);
     }
 }
+
+
+export type BlockadeType = "normal" | "directional";

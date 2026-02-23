@@ -37,7 +37,16 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import RenderedNodeHighlight from "./RenderedNodeHighlight.svelte";
     import RenderedRouteJunction from "./RenderedRouteJunction.svelte";
     import RenderedRouteSegment from "./RenderedRouteSegment.svelte";
-    import type { ConnectionRenderData, ControlNodeCenterRenderData, ControlNumberRenderData, CourseLegRenderData, NodeHighlightRenderData, NodeRenderData, RouteJunctionRenderData } from "./render-data";
+    import type {
+        BlockadeRenderData,
+        ConnectionRenderData,
+        ControlNodeCenterRenderData,
+        ControlNumberRenderData,
+        CourseLegRenderData,
+        NodeHighlightRenderData,
+        NodeRenderData,
+        RouteJunctionRenderData
+    } from "./render-data";
     import { averageHeight, isPortalRouteSegment } from "$lib/utils/misc";
     import RenderedBlockade from "./RenderedBlockade.svelte";
 
@@ -373,7 +382,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
             {
                 if (node)
                 {
-                    const existing_data = data.find(item => item.node === node)
+                    const existing_data = data.find(item => item.node === node);
                     
                     if (!existing_data)
                     {
@@ -492,9 +501,16 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         // Arrange nodes in pairs for each connection.
         .map(node =>
         {
-            return [...node.all_neighbours].map((neighbour): Pair<MapNode> =>
+            return [...node.all_neighbours].map((neighbour): BlockadeRenderData =>
             {
-                return { a: node, b: neighbour };
+                let data: BlockadeRenderData = { a: node, b: neighbour, relation: "Normal" };
+
+                if (data.a.portal_neighbours.has(data.b))
+                {
+                    data.relation = "Portal";
+                }
+
+                return data;
             });
         })
         .flat(1)

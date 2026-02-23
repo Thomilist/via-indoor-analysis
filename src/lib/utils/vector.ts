@@ -56,6 +56,11 @@ export class Vector
         this.set(points);
     }
 
+    static createFromPointAndVector(point: Partial<Point>, vector: Vector)
+    {
+        return vector.originVector().translateWithOriginVector(new Vector({b: point}));
+    }
+
     set(points?: { a?: Partial<Point>, b?: Partial<Point> })
     {
         if (points?.a?.x !== undefined) { this.a.x = points.a.x; }
@@ -184,5 +189,20 @@ export class Vector
             this.b.y - this.a.y,
             this.b.x - this.a.x
         );
+    }
+
+    normalXY()
+    {
+        const origin_vector = this.originVector();
+
+        return new Vector
+        ({
+             b:
+             {
+                 x: origin_vector.b.x,
+                 y: -origin_vector.b.y,
+                 z: this.b.z
+             }
+        }).translateWithOriginVector(this);
     }
 }

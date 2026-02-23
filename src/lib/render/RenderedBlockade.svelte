@@ -22,6 +22,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <script lang="ts">
+    import { type Point, Vector } from "$lib/utils/vector";
     import { iof_print } from "./iof";
     import type { BlockadeRenderData } from "./render-data";
 
@@ -38,8 +39,19 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         fill: "none",
         stroke: iof_print.colour,
         "stroke-opacity": iof_print["opacity"],
-        "stroke-width": iof_print["stroke-width"] * 1.5
+        "stroke-width": iof_print["stroke-width"] * 1.5,
     };
+
+    const mid_point: Point = {
+        x: (data.a.x + data.b.x) / 2,
+        y: (data.a.y + data.b.y) / 2,
+        z: (data.a.z + data.b.z) / 2,
+    };
+
+    const blockade_vector = new Vector(data);
+    const direction_vector = Vector.createFromPointAndVector(mid_point, blockade_vector.normalXY()
+        .unitVector(["x", "y"])
+        .scale(20));
 </script>
 
 
@@ -47,4 +59,13 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     x1={data.a.x} y1={data.a.y}
     x2={data.b.x} y2={data.b.y}
     {...iof_line_attributes}
+    stroke-dasharray={data.relation === "Portal" ? "4 4" : ""}
 />
+
+{#if data.relation === "Portal"}
+    <polyline
+        points={`${data.a.x},${data.a.y} ${direction_vector.b.x},${direction_vector.b.y} ${data.b.x},${data.b.y}`}
+        {...iof_line_attributes}
+        stroke-width="4"
+    />
+{/if}

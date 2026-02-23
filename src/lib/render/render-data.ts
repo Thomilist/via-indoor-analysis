@@ -88,5 +88,6 @@ export type RouteJunctionRenderData =
 export type BlockadeRenderData =
 {
     a: BlockadeMapNode,
-    b: BlockadeMapNode
-}
+    b: BlockadeMapNode,
+    relation: NodeRelation
+};
