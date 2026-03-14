@@ -24,6 +24,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 import { Vector } from "$lib/utils/vector";
 import type { BlockadeMapNode, MapNode } from "./node";
 
+
 export class Blockade
 {
     a: BlockadeMapNode;

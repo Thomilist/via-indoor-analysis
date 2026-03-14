@@ -21,9 +21,9 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-import { Blockade } from "$lib/map-graph/blockade";
-import { BlockadeMapNode, MapNode, WaypointMapNode } from "$lib/map-graph/node";
+import { MapNode, WaypointMapNode } from "$lib/map-graph/node";
 import { PathStep } from "$lib/map-graph/path";
+import { isBlocked } from "$lib/pathfinding/check-blockades";
 import { blockades, map_graph } from "$lib/state";
 import { Distance } from "$lib/utils/distance";
 import { SortedSet } from "$lib/utils/sorted-set";
@@ -34,8 +34,6 @@ export function findPaths()
 {
     console.log("Finding paths...");
     const start_time = Date.now();
-
-    updateBlockades();
     
     get(map_graph).nodes
         .filter(node => WaypointMapNode.isWaypointMapNode(node))
@@ -47,37 +45,6 @@ export function findPaths()
     
     const time = Date.now() - start_time;
     console.log(`Path finding complete (${time.valueOf()} ms)`);
-}
-
-
-function updateBlockades()
-{
-    blockades.set([]);
-
-    const blockade_nodes = new Set<BlockadeMapNode>(get(map_graph).nodes
-        .filter(node => BlockadeMapNode.isBlockadeMapNode(node)));
-
-    while (blockade_nodes.size > 0)
-    {
-        const blockade_node = blockade_nodes.values().next().value;
-
-        if (!blockade_node)
-        {
-            break;
-        }
-
-        blockade_node.normal_neighbours.forEach(node =>
-        {
-            get(blockades).push(new Blockade(blockade_node, node, "normal"));
-        });
-
-        blockade_node.portal_neighbours.forEach(node =>
-        {
-            get(blockades).push(new Blockade(blockade_node, node, "directional"));
-        });
-
-        blockade_nodes.delete(blockade_node);
-    }
 }
 
 
@@ -116,15 +83,9 @@ function findShortestPaths(from: WaypointMapNode)
             {
                 if (current && unvisited_nodes.has(node))
                 {
-                    if (!current.node.portal_neighbours.has(node))
+                    if (isBlocked(get(blockades), {a: current.node, b: node}))
                     {
-                        for (const blockade of get(blockades))
-                        {
-                            if (blockade.obstructsConnection({a: current.node, b: node}))
-                            {
-                                return;
-                            }
-                        }
+                        return;
                     }
 
                     const current_distance = current.distance.value();

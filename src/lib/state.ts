@@ -21,6 +21,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 
+import { findSoftlocks } from "$lib/pathfinding/find-softlocks";
+import { updateBlockades } from "$lib/pathfinding/update-blockades";
 import { get, writable } from "svelte/store";
 import { MapMeta } from "./map";
 import { MapGraph } from "./map-graph/graph";
@@ -61,6 +63,7 @@ export const route_filters = writable(
     exclude_crossover_detours: { enabled: true }
 });
 export const render_blockades = writable<boolean>(false);
+export const strongly_connected_components = writable<Set<MapNode>[]>([]);
 
 export type Language = "DA" | "EN";
 export type Mode = "View" | "Edit";
@@ -70,8 +73,10 @@ export type CalculationView = "Paths" | "Legs";
 
 export function calculateState()
 {
+    updateBlockades();
     findPaths();
     findRoutes();
+    findSoftlocks();
     get(courses).forEach(course => findShortestRoute(course));
 }
 
