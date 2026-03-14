@@ -22,13 +22,13 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 import { MapMeta } from "$lib/map";
-import { course_index, courses, loadStateFromObject, via_map } from "$lib/state";
+import { course_index, courses, loadStateFromObject, render_blockades, via_map } from "$lib/state";
 import { get } from "svelte/store";
 import type { PageLoad } from "./$types";
 import { Distance } from "$lib/utils/distance";
 import { rerender } from "$lib/render/rerender";
 
-export const load: PageLoad = async ({ params, fetch }) =>
+export const load: PageLoad = async ({ params, url, fetch }) =>
 {
     const meta = await (await fetch(`/${params.event}/meta.json`)).json();
 
@@ -59,5 +59,11 @@ export const load: PageLoad = async ({ params, fetch }) =>
     });
 
     course_index.set(longest_course_index);
+
+    if (url.searchParams.get("render_blockades"))
+    {
+        render_blockades.set(true);
+    }
+    
     rerender();
-}
+};

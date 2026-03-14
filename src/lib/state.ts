@@ -60,6 +60,7 @@ export const route_filters = writable(
     filter_by_sameness: { enabled: true, max_sameness: 0.5 },
     exclude_crossover_detours: { enabled: true }
 });
+export const render_blockades = writable<boolean>(false);
 
 export type Language = "DA" | "EN";
 export type Mode = "View" | "Edit";

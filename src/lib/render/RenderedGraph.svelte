@@ -27,7 +27,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { fetchRoutes, useRoutes } from "$lib/pathfinding/pick-routes";
     import { routeSegments } from "$lib/pathfinding/split-routes";
     import {
-        calculation_view, course_index, courses, current_leg, current_routes, edit_mode, map_graph, mode
+        calculation_view, course_index, courses, current_leg, current_routes, edit_mode, map_graph, mode,
+        render_blockades
     } from "$lib/state";
     import RenderedConnection from "./RenderedConnection.svelte";
     import RenderedControlNodeCenter from "./RenderedControlNodeCenter.svelte";
@@ -529,9 +530,11 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         <RenderedConnection {data}/>
     {/each}
 
-    {#each blockade_render_data as data (`RenderedBlockade ${data.a.id} ${data.b.id}`)}
-        <RenderedBlockade {data}/>
-    {/each}
+    {#if $render_blockades}
+        {#each blockade_render_data as data (`RenderedBlockade ${data.a.id} ${data.b.id}`)}
+            <RenderedBlockade {data}/>
+        {/each}
+    {/if}
 
     {#each control_node_center_render_data as data (`RenderedControlNodeCenter ${data.control.id}`)}
         <RenderedControlNodeCenter {data}/>
