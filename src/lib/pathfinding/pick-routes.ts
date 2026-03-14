@@ -22,7 +22,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 import { get } from "svelte/store";
-import { course_index, courses, current_routes, map_graph, mode, routeFilters } from "../state";
+import { course_index, courses, current_routes, map_graph, mode, route_filters } from "../state";
 import { ControlMapNode, WaypointMapNode } from "../map-graph/node";
 import { Route } from "../map-graph/route";
 import { groupIncludesOther, powSelf } from "$lib/utils/misc";
@@ -361,7 +361,7 @@ export function fetchRoutes()
 
     if (!least_elevation) { return []; }
 
-    const options = get(routeFilters);
+    const options = get( route_filters);
 
     if (options.exclude_duplicates.enabled)
     {

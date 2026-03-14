@@ -51,7 +51,7 @@ export const current_leg = writable<ControlMapNode[]>([]);
 export const current_routes = writable<Route[]>([]);
 export const elevation_plot = writable<boolean>(true);
 export const blockades = writable<Blockade[]>([]);
-export const routeFilters = writable(
+export const route_filters = writable(
 {
     exclude_duplicates: { enabled: true },
     exclude_outliers_by_distance: { enabled: true, threshold: 1.2 },

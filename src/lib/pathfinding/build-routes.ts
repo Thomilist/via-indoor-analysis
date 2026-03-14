@@ -262,7 +262,7 @@ function findShortestRoute(from: WaypointMapNode, to: WaypointMapNode, branching
 function findControlNeighbours(control: ControlMapNode)
 {
     // Clear old relations.
-    control.control_neighbours.clear()
+    control.control_neighbours.clear();
 
     // Find new relations.
     const connected_waypoints: Set<WaypointMapNode> = new Set();
