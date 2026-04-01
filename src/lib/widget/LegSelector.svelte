@@ -31,12 +31,12 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     import { onMount, tick } from "svelte";
 
 
-    let leg_label =
-    $state({
+    let leg_label = $state({
         a: "",
         b: ""
     });
 
+    let current_course_index = -1;
 
     async function updateLegSelection()
     {
@@ -80,7 +80,13 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         await updateLegSelection();
     });
 
-    course_index.subscribe(updateLegSelection);
+    $effect(() => {
+        if (current_course_index != $course_index)
+        {
+            updateLegSelection();
+            current_course_index = $course_index;
+        }
+    })
 </script>
 
 
