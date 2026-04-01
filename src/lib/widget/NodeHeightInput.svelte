@@ -34,7 +34,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 
 
 <label class="single-labeled-input inline">
-    {({DA: "Højde:", EN: "Højde"}[$lang])}
+    {({DA: "Højde:", EN: "Height"}[$lang])}
 
     <input type="number" min=1 max=5.5 step=0.5 bind:value={$add_node_height}/>
 </label>
