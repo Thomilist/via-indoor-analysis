@@ -88,7 +88,7 @@ function findRoutesForLeg(from: ControlMapNode, to: ControlMapNode, distance_thr
     if (from === to) { return; }
     if (!from.control_neighbours.has(to)) { return; }
     
-    const applied_distance_threshold = distance_threshold ?? 2;
+    const applied_distance_threshold = distance_threshold ?? 3;
     const shortest_routes: Route[] = [];
     const shortest_route_candidates: SortedSet<Route> = new SortedSet(Route.sortByDistance);
     const first_shortest_route = findShortestRoute(from, to);
