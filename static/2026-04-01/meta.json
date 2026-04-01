@@ -1,0 +1,13 @@
+{
+    "map": {
+        "source": "via-map.jpg",
+        "width": 2988,
+        "height": 4058,
+        "resolution": 450,
+        "scale": 700,
+        "print_scale": 700
+    },
+    "state": {
+        "source": "saved-state.json"
+    }
+}
