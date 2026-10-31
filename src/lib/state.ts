@@ -179,7 +179,7 @@ export function loadStateFromObject(data: any, silent?: boolean)
                 {
                     new_course.addControl(control);
                 }
-            })
+            });
 
             courses_store.push(new_course);
         });
