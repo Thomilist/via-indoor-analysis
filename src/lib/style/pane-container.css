@@ -24,6 +24,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
 .pane-container
 {
     --header-height: 50px;
+    --header-width: 100%;
     --controls-width: 320px;
     --controls-height-mobile: 250px;
     --elevation-height: 160px;
@@ -52,6 +53,8 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
         grid-template-areas: 
             "map header"
             "map controls";
+
+        --header-width: var(--controls-width);
     }
 
     /* Desktop, portrait or landscape */

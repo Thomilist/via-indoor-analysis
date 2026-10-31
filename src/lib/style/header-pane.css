@@ -60,7 +60,7 @@ along with via-indoor-analysis. If not, see <https://www.gnu.org/licenses/>.
     /* Mobile, landscape */
     @media (height < 800px) and (orientation: landscape)
     {
-        width: var(--controls-width);
+        width: var(--header-width);
         height: calc(var(--header-height) * 0.6);
     }
 
